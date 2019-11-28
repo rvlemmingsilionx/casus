@@ -7,10 +7,9 @@
         resource_group: A2S2_GROEP_03
         name: testloadbalancer1
         sku: Basic
-        location: westeu
         frontend_ip_configurations:
           - name: frontendipconf0
-            public_ip_address: testpip
+            public_ip_address: loadbalancerip1
         backend_address_pools:
           - name: backendaddrpool0
         probes:
@@ -30,9 +29,3 @@
             frontend_port: 80
             backend_port: 80
             probe: prob0
-        inbound_nat_rules:
-          - name: inboundnatrule0
-            backend_port: 8080
-            protocol: Tcp
-            frontend_port: 8080
-            frontend_ip_configuration: frontendipconf0
