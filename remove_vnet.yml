@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: delete VNET
+      azure_rm_virtualnetwork:
+        resource_group: A2S2_GROEP_03
+        name: test1
+        state: absent
