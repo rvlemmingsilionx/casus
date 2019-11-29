@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: NSG maken
+      azure_rm_securitygroup:
+        resource_group: A2S2_GROEP_03
+        name: NSG-vm01
+        state: present
+        rules:
+          - name: SSH
+            protocol: Tcp
+            destination_port_range: 22
+            access: Allow
+            priority: 1001
+            direction: Inbound
