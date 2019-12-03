@@ -5,8 +5,8 @@
     - name: Create Virtual Network Interface Card
       azure_rm_networkinterface:
         resource_group: A2S2_GROEP_03
-        name: vm1nictest
+        name: vm01nic
         virtual_network: vNet01
         subnet: Front-End
-        security_group: NSG-vm01
-        public_ip_name: vm01iptest
+        security_group: front-end
+        public_ip_name: vm01ip

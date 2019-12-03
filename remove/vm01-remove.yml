@@ -2,22 +2,22 @@
 - hosts: localhost
   connection: local
   tasks:
-    - name: Aanmaken VM
+    - name: Verwijderen VM
       azure_rm_virtualmachine:
         resource_group: A2S2_GROEP_03
         name: vm01
         state: absent
     - name: verwijderen storage acc
-      azure_rm_storageaccount:
+      azure_rm_managed_disk:
         resource_group: A2S2_GROEP_03
         name: vm013562
         state: absent
     - name: verwijderen public ip
       azure_rm_networkinterface:
         resource_group: A2S2_GROEP_03
-        name: vm1nic
+        name: vm01nic
         state: absent
-    - name: verwijderen nic
+    - name: verwijderen public ip
       azure_rm_publicipaddress:
         resource_group: A2S2_GROEP_03
         name: vm01ip

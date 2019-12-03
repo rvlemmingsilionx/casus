@@ -9,10 +9,7 @@
         vm_size: Standard_B2s
         admin_username: rens
         admin_password: Welkom123!
-        ssh_public_keys:
-          - path: /home/rens/.ssh/authorized_keys
-            key_data: ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnoP6resutttHctu6DX9MCNK7lEh1bJnxM7FPfoWq0ouleaUuMks7av/SWAk0387G2ftoBR+VuT0BMhLfjt81R8vbzzHbc0VeSYzKsFUWWhK2N/nmf/hNx1+YuCv1/PnxrKPHgIKrGfc9kjHCWHbf3F4zGPU7qvHj15f1FOuepL4/DGWKhvXORH251Yva8znASP5ZIvLhBjnBULM9YEYc0tGNxBDre05QhH8ztvEmuN1zATA61tJh1pYvS7pL9cnzzQVrY51e1/LLCvwY825C+CWcka6mJ1gW/zcMCcOJ3+lgRWs95aj2QTs8ACy1ZBj6cr47gdAC8MFY3a7/O1AX1w== rsa-key-20191129
-        network_interfaces: vm1nictest
+        network_interfaces: vm01nic
         managed_disk_type: Standard_LRS
         image:
           offer: UbuntuServer
