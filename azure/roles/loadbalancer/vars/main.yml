@@ -1,0 +1,7 @@
+loadbalancername: loadbalancer1
+feipconf: frontendipconf0
+backendpoolname: backendpool1
+probename: probe1
+inboundnatpoolname: inboundnatpool0
+lbrulename: rule1
+loadbalancerip: loadbalancerip0

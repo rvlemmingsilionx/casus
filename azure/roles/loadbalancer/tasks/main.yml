@@ -1,0 +1,35 @@
+- name: Aanmaken loadbalancer IP
+  azure_rm_publicipaddress:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ loadbalancerip }}"
+    allocation_method: static
+
+- name: Aanmaken Loadbalancer
+  azure_rm_loadbalancer:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ loadbalancername }}"
+    sku: Basic
+    frontend_ip_configurations:
+      - name: "{{ feipconf }}"
+        public_ip_address: "{{ loadbalancerip }}"
+    backend_address_pools:
+      - name: "{{ backendpoolname }}"
+    probes:
+      - name: "{{ probename }}"
+        port: 80
+        protocol: Http
+        request_path: /
+    inbound_nat_pools:
+      - name: "{{ inboundnatpoolname }}"
+        frontend_ip_configuration_name: "{{ feipconf }}"
+        protocol: Tcp
+        frontend_port_range_start: 80
+        frontend_port_range_end: 81
+        backend_port: 80
+    load_balancing_rules:
+      - name: "{{ lbrulename }}"
+        frontend_ip_configuration: "{{ feipconf }}"
+        backend_address_pool: "{{ backendpoolname }}"
+        frontend_port: 80
+        backend_port: 80
+        probe: "{{ probename }}"

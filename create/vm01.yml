@@ -6,6 +6,7 @@
       azure_rm_virtualmachine:
         resource_group: A2S2_GROEP_03
         name: vm01
+        availability_set: gratisbiervoorhugo
         vm_size: Standard_B2s
         admin_username: rens
         admin_password: Welkom123!

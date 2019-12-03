@@ -8,5 +8,5 @@
         name: vm01nic
         virtual_network: vNet01
         subnet: Front-End
-        security_group: front-end
+#        security_group: front-end
         public_ip_name: vm01ip

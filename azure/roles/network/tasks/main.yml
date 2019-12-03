@@ -1,0 +1,24 @@
+- name: Aanmaken Vnet
+  azure_rm_virtualnetwork:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ newvnetname }}"
+    address_prefixes_cidr:
+      - "{{ vnetprefix }}"
+- name: Toevoegen Frond-end Subnet
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ frontendsubnetname }}"
+    address_prefix: "{{ frontsubnetpfx }}"
+    virtual_network: "{{ newvnetname }}"
+- name: Toevoegen Backend Subnet
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ backendsubnetname }}"
+    address_prefix: "{{ backsubnetpfx }}"
+    virtual_network: "{{ newvnetname }}"
+- name: Toevoegen Management Subnet
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ managementsubnetname }}"
+    address_prefix: "{{ managementsubnetpfx }}"
+    virtual_network: "{{ newvnetname }}"
