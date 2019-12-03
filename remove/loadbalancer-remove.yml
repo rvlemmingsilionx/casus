@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Loadbalancer
+      azure_rm_loadbalancer:
+        resource_group: A2S2_GROEP_03
+        name: testloadbalancer1
+        state: absent
+    - name: loadbalancerip
+      azure_rm_publicipaddress:
+        resource_group: A2S2_GROEP_03
+        name: loadbalancerip1
+        state: absent
