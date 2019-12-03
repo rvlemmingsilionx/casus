@@ -2,10 +2,7 @@
 - hosts: localhost
   connection: local
   roles:
-    - vnet
-    - availabilityset
-    - nsg
-    - publicip
-    - virtualnic
-    - virtualmachine
+    - network
     - loadbalancer
+    - availabilityset
+    - virtualmachine
