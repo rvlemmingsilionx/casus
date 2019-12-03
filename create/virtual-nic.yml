@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Create Virtual Network Interface Card
+      azure_rm_networkinterface:
+        resource_group: A2S2_GROEP_03
+        name: vm1nictest
+        virtual_network: vNet01
+        subnet: Front-End
+        security_group: NSG-vm01
+        public_ip_name: vm01iptest
