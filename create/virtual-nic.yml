@@ -10,3 +10,4 @@
         subnet: Front-End
 #        security_group: front-end
         public_ip_name: vm01ip
+        state: absent

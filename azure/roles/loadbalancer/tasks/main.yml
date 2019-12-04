@@ -3,12 +3,14 @@
     resource_group: "{{ resourcegroup }}"
     name: "{{ loadbalancerip }}"
     allocation_method: static
-
+    state: "{{ status }}
+"
 - name: Aanmaken Loadbalancer
   azure_rm_loadbalancer:
     resource_group: "{{ resourcegroup }}"
     name: "{{ loadbalancername }}"
     sku: Basic
+    state: "{{ status }}"
     frontend_ip_configurations:
       - name: "{{ feipconf }}"
         public_ip_address: "{{ loadbalancerip }}"

@@ -1,3 +1,5 @@
+status: present
+
 loadbalancername: loadbalancer1
 feipconf: frontendipconf0
 backendpoolname: backendpool1

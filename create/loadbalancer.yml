@@ -5,7 +5,8 @@
     - name: create load balancer
       azure_rm_loadbalancer:
         resource_group: A2S2_GROEP_03
-        name: testloadbalancer1
+        name: loadbalancer1
+        state: absent
         sku: Basic
         frontend_ip_configurations:
           - name: frontendipconf0

@@ -4,21 +4,67 @@
     name: "{{ newvnetname }}"
     address_prefixes_cidr:
       - "{{ vnetprefix }}"
+    state: "{{ status }}"
+
 - name: Toevoegen Frond-end Subnet
   azure_rm_subnet:
     resource_group: "{{ resourcegroup }}"
     name: "{{ frontendsubnetname }}"
     address_prefix: "{{ frontsubnetpfx }}"
     virtual_network: "{{ newvnetname }}"
+    state: "{{ status }}"
+
 - name: Toevoegen Backend Subnet
   azure_rm_subnet:
     resource_group: "{{ resourcegroup }}"
     name: "{{ backendsubnetname }}"
     address_prefix: "{{ backsubnetpfx }}"
     virtual_network: "{{ newvnetname }}"
+    state: "{{ status }}"
+
 - name: Toevoegen Management Subnet
   azure_rm_subnet:
     resource_group: "{{ resourcegroup }}"
     name: "{{ managementsubnetname }}"
     address_prefix: "{{ managementsubnetpfx }}"
     virtual_network: "{{ newvnetname }}"
+    state: "{{ status }}"
+
+- name: Toevoegen Front-End NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: Front-End
+    rules:
+      - name: HTTP
+        protocol: Tcp
+        destination_port_range: "{{ destporthttpfront }}"
+        access: Allow
+        priority: "{{ priorityhttpfront }}"
+        direction: Inbound
+    state: "{{ status }}"
+
+- name: Toevoegen Back-end NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: Back-End
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: "{{ destportsshback }}"
+        access: Allow
+        priority: "{{ prioritysshback }}"
+        direction: Inbound
+    state: "{{ status }}"
+
+- name: Toevoegen Management NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: Management
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: "{{ destportsshman }}"
+        access: Allow
+        priority: "{{ prioritysshman }}"
+        direction: Inbound
+    state: "{{ status }}"

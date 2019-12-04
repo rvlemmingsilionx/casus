@@ -6,3 +6,12 @@ managementsubnetname: Management
 frontsubnetpfx: 10.0.0.0/24
 backsubnetpfx: 10.0.1.0/24
 managementsubnetpfx: 10.0.2.0/24
+
+destporthttpfront: 80
+priorityhttpfront: 100
+destportsshback: 22
+prioritysshback: 100
+destportsshman: 22
+prioritysshman: 100
+
+status: present

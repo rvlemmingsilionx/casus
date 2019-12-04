@@ -2,7 +2,7 @@
 - hosts: localhost
   connection: local
   roles:
-    - availabilityset
-#    - network
+#    - availabilityset
+    - network
 #    - loadbalancer
 #    - virtualmachines
