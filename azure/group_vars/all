@@ -1,1 +1,3 @@
 resourcegroup: A2S2_GROEP_03
+backendpoolname: backendpool
+newvnetname: MyVnet

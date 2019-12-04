@@ -1,0 +1,23 @@
+- name: Aanmaken "{{ vmname1 }}" nic
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ vmname1 }}"nic
+    virtual_network: "{{ newvnetname }}"
+    subnet: "{{ subnetnic }}"
+    security_group: "{{ securitygroupnic }}"
+    state: "{{ status }}"
+    ip_configurations
+      - name: "{{ vmname1 }}"ipconf
+        load_balancer_backend_address_pools: "{{ backendpoolname }}"
+
+- name: Aanmaken "{{ vmname2 }}" nic
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ vmname2 }}"nic
+    virtual_network: "{{ newvnetname }}"
+    subnet: "{{ subnetnic }}"
+    security_group: "{{ securitygroupnic }}"
+    state: "{{ status }}"
+    ip_configurations
+      - name: "{{ vmname2 }}"ipconf
+        load_balancer_backend_address_pools: "{{ backendpoolname }}"
