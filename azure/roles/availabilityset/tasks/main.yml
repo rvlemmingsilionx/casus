@@ -3,7 +3,7 @@
   azure_rm_availabilityset:
     name: "{{ availabset }}"
     resource_group: "{{ resourcegroup }}"
-#    state: absent
+    state: absent
     sku: Aligned
 - debug:
     msg: "{{ availabset }} is toegevoegd in resource groep: {{ resourcegroup }}."
