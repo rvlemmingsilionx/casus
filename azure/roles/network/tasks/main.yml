@@ -68,3 +68,24 @@
         priority: "{{ prioritysshman }}"
         direction: Inbound
     state: "{{ status }}"
+
+- name: Front-End Subnet aan NSG koppelen
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ frontendsubnetname }}"
+    security_group: Front-End
+    virtual_network_name: "{{ newvnetname }}"
+
+- name: Back-End Subnet aan NSG koppelen
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ backendsubnetname }}"
+    security_group: Back-End
+    virtual_network_name: "{{ newvnetname }}"
+
+- name: Management Subnet aan NSG koppelen
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ managementsubnetname }}"
+    security_group: Management
+    virtual_network_name: "{{ newvnetname }}"
