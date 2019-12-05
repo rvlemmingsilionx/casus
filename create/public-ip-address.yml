@@ -5,7 +5,7 @@
     - name: Public IP aanmaken
       azure_rm_publicipaddress:
         resource_group: A2S2_GROEP_03
-        name: loadbalancerip0
+        name: vm01ip
         allocation_method: static
         sku: basic
         state: absent        

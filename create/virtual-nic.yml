@@ -5,9 +5,9 @@
     - name: Create Virtual Network Interface Card
       azure_rm_networkinterface:
         resource_group: A2S2_GROEP_03
-        name: vm01nic
-        virtual_network: vNet01
+        name: vm02nic
+        virtual_network: MyVnet
         subnet: Front-End
 #        security_group: front-end
-        public_ip_name: vm01ip
+#        public_ip_name: vm01ip
         state: absent

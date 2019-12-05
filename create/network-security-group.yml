@@ -5,7 +5,7 @@
     - name: NSG maken
       azure_rm_securitygroup:
         resource_group: A2S2_GROEP_03
-        name: vm01nic
+        name: vm03nic
         state: absent
         rules:
           - name: SSH

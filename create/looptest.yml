@@ -1,0 +1,59 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    vms:
+      dev:
+      - name: vm01rens
+        vmsize: Standard_B2s
+        resource_group: A2S2_GROEP_03
+        adminusername: rens
+        adminpassword: Welkom123!
+        networkinterfaces: vm01nic
+        manageddisktype: Standard_LRS
+        os: UbuntuServer
+        publish: Canonical
+        type: 16.04-LTS
+        versie: latest
+
+      - name: vm02rens
+        vmsize: Standard_B2s
+        resource_group: A2S2_GROEP_03
+        adminusername: rens
+        adminpassword: Welkom123!
+        networkinterfaces: vm02nic
+        manageddisktype: Standard_LRS
+        os: UbuntuServer
+        publish: Canonical
+        type: 16.04-LTS
+        versie: latest
+
+      - name: vm03rens
+        vmsize: Standard_B2s
+        resource_group: A2S2_GROEP_03
+        adminusername: rens
+        adminpassword: Welkom123!
+        networkinterfaces: vm03nic
+        manageddisktype: Standard_LRS
+        os: UbuntuServer
+        publish: Canonical
+        type: 16.04-LTS
+        versie: latest
+  tasks:
+    - name: Maken VM
+      azure_rm_virtualmachine:
+        resource_group: A2S2_GROEP_03
+        name: "{{ item.name }}"
+        vm_size: "{{ item.vmsize }}"
+        admin_username: "{{ item.adminusername }}"   
+        admin_password: "{{ item.adminpassword }}"
+        network_interfaces: "{{ item.networkinterfaces }}"
+        managed_disk_type: "{{ item.manageddisktype }}"
+        image:
+          offer: "{{ item.os }}"
+          publisher: "{{ item.publish }}"
+          sku: "{{ item.type }}"
+          version: "{{ item.versie }}"
+        remove_on_absent: ["all"]
+        state: absent
+      with_items: "{{ vms.dev }}"
