@@ -1,0 +1,73 @@
+---
+- name: Create VM2
+  hosts: localhost
+  connection: local
+  tasks:
+
+#  - name: Create storage account
+#    azure_rm_storageaccount:
+#      resource_group: Testing
+#      name: testaccount001
+#      account_type: Standard_LRS
+
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: A2S2_GROUP_03
+      name: HtestVnet01
+      address_prefixes: "10.10.0.0/16"
+
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: A2S2_GROUP_03
+      name: Htestsubnet01
+      address_prefix: "10.10.0.0/24"
+      virtual_network: HtestVnet01
+
+  - name: Create public ip
+    azure_rm_publicipaddress:
+      resource_group: A2S2_GROUP_03
+      allocation_method: Static
+      name: HtestIP01
+
+  - name: Create security group that allows SSH
+    azure_rm_securitygroup:
+      resource_group: A2S2_GROUP_03
+      name: HtestNSG01
+      rules:
+        - name: SSH
+          protocol: Tcp
+          destination_port_range: 22
+          access: Allow
+          priority: 101
+          direction: Inbound
+
+  - name: Create NIC
+    azure_rm_networkinterface:
+      resource_group: A2S2_GROUP_03
+      name: HtestNIC01
+      virtual_network: HtestVnet01
+      subnet: subnet001
+      public_ip_name: HtestIP01
+      security_group: HtestNSG01
+
+  - name: Create virtual machine
+    azure_rm_virtualmachine:
+      resource_group: A2S2_GROUP_03
+      name: HtestVM01
+      vm_size: Standard_B2s
+#      storage_account: testaccount001
+#      storage_container: testvm001
+#      storage_blob: testvm001.vhd
+      admin_username: emonds
+# Quick password, just for testing purposes.
+      admin_password: pass
+      network_interfaces: HtestNIC01
+      image:
+        offer: UbuntuServer
+        publisher: Canonical
+        sku: '18.04-LTS'
+        version: latest
+...
+
+# fatal: [localhost]: FAILED! => {"changed": false, "module_stderr": "No handlers could be found for logger \"keyring.backend\"\nTraceback (most recent call last):\n  File \"/tmp/ansible_ZF7O8d/ansible_module_azure_rm_virtualnetwork.py\", line 352, in <module>\n    main()\n  File \"/tmp/ansible_ZF7O8d/ansible_module_azure_rm_virtualnetwork.py\", line 349, in main\n    AzureRMVirtualNetwork()\n  File \"/tmp/ansible_ZF7O8d/ansible_module_azure_rm_virtualnetwork.py\", line 205, in __init__\n    supports_check_mode=True)\n  File \"/tmp/ansible_ZF7O8d/ansible_modlib.zip/ansible/module_utils/azure_rm_common.py\", line 270, in __init__\n  File \"/tmp/ansible_ZF7O8d/ansible_modlib.zip/ansible/module_utils/azure_rm_common.py\", line 576, in _get_credentials\n  File \"/tmp/ansible_ZF7O8d/ansible_modlib.zip/ansible/module_utils/azure_rm_common.py\", line 493, in _get_azure_cli_credentials\n  File \"/usr/local/lib/python2.7/dist-packages/azure/common/credentials.py\", line 47, in get_azure_cli_credentials\n    profile = get_cli_profile()\n  File \"/usr/local/lib/python2.7/dist-packages/azure/common/credentials.py\", line 28, in get_cli_profile\n    ACCOUNT.load(os.path.join(azure_folder, 'azureProfile.json'))\n  File \"/usr/local/lib/python2.7/dist-packages/azure/cli/core/_session.py\", line 61, in load\n    self.save()\n  File \"/usr/local/lib/python2.7/dist-packages/azure/cli/core/_session.py\", line 65, in save\n    with codecs_open(self.filename, 'w', encoding=self._encoding) as f:\n  File \"/usr/lib/python2.7/codecs.py\", line 898, in open\n    file = __builtin__.open(filename, mode, buffering)\nIOError: [Errno 2] No such file or directory: '/root/.azure/azureProfile.json'\n", "module_stdout": "", "msg": "MODULE FAILURE", "rc": 1}
+#         to retry, use: --limit @/etc/ansible/createVM2.retry
