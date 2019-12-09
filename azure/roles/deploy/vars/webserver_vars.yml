@@ -5,21 +5,23 @@ nsgs:
 
 nics:
   web:
-  - name: nicweb01
+  - nicname: nicweb01
     websubnet: Front-End
-    
+    nsg: nsgweb01
+    ipconfig: ipconfigweb01
 
-  - name: nicweb02
+  - nicname: nicweb02
     websubnet: Front-End
+    nsg: nsgweb02
+    ipconfig: ipconfigweb02
 
 vms:
   web:
   - name: web01
-    nicname: web01nic
     vmsize: Standard_B2s
     adminusername: rens
     adminpassword: Welkom123!
-    networkinterfaces: web01nic
+    networkinterfaces: nicweb01
     manageddisktype: Standard_LRS
     os: UbuntuServer
     publish: Canonical
@@ -27,11 +29,11 @@ vms:
     versie: latest
     status: present
 
-  - name: vm02rens
+  - name: web01
     vmsize: Standard_B2s
     adminusername: rens
     adminpassword: Welkom123!
-    networkinterfaces: vm02nic
+    networkinterfaces: nicweb02
     manageddisktype: Standard_LRS
     os: UbuntuServer
     publish: Canonical

@@ -1,6 +1,6 @@
 - name: Include webserver Vars
   include_vars:
-    file: webserver_vars.yml
+    dir: vars
 
 - name: Maken Network Security Groep voor Webservers
   azure_rm_securitygroup:
@@ -12,19 +12,23 @@
         destination_port_range: 22
         access: Allow
         priority: 100
-        direction: inbound
+        direction: Inbound
   with_items: "{{ nsgs.web }}"
 
 - name: Maken nics
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ item.name }}"
+    name: "{{ item.nicname }}"
     virtual_network: "{{ vnetname }}"
     subnet: "{{ item.websubnet}}"
     security_group: "{{ item.nsg}}"
-  with_items:
-    - "{{ nsgs.web }}"
-    - "{{ nics.web }}"
+    ip_configurations:
+      - name: "{{ item.ipconfig }}"
+        load_balancer_backend_address_pools:
+          - "{{ loadbalancer1.state.backend_address_pools[0].id }}"
+          - name: "{{ backendpoolname }}"
+            load_balancer: loadbalancer01
+  with_items: "{{ nics.web }}"
 
 
 - name: Maken VM
