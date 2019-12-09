@@ -2,9 +2,5 @@
 - hosts: localhost
   connection: local
   roles:
-    - network
-#    - availabilityset
-#    - loadbalancer
-    - webservers
-#    - beheerserver
-#    - nfsserver
+    - deploy
+#    - configure

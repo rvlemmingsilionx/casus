@@ -1,10 +1,14 @@
+- name: Include Loadbalancer Vars
+  include_vars:
+    file: loadbalancer_vars.yml
+
 - name: Aanmaken loadbalancer IP
   azure_rm_publicipaddress:
     resource_group: "{{ resourcegroup }}"
     name: "{{ loadbalancerip }}"
     allocation_method: static
-    state: "{{ status }}
-"
+    state: "{{ status }}"
+
 - name: Aanmaken Loadbalancer
   azure_rm_loadbalancer:
     resource_group: "{{ resourcegroup }}"

@@ -3,4 +3,4 @@ securitygroupnic: Frond-End
 subnetnic: Front-End
 status1: present
 
-vmname2: apacheserver2
+

@@ -1,8 +1,0 @@
-status: present
-
-loadbalancername: loadbalancer1
-feipconf: frontendipconf0
-probename: probe1
-inboundnatpoolname: inboundnatpool0
-lbrulename: rule1
-loadbalancerip: loadbalancerip0

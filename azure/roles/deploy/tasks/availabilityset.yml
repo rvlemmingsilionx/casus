@@ -1,9 +1,10 @@
----
+- name: Include network vars
+  include_vars:
+    file: availabilityset_vars.yml
+    
 - name: Aanmaken {{ availabset }}
   azure_rm_availabilityset:
     name: "{{ availabset }}"
     resource_group: "{{ resourcegroup }}"
-    state: absent
+    state: "{{ status }}"
     sku: Aligned
-- debug:
-    msg: "{{ availabset }} is toegevoegd in resource groep: {{ resourcegroup }}."

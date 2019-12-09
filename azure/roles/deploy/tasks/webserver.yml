@@ -1,23 +1,46 @@
-- name: Aanmaken "{{ vmname1 }}" nic
-  azure_rm_networkinterface:
-    resource_group: "{{ resourcegroup }}"
-    name: "{{ vmname1 }}nic"
-    virtual_network: "{{ newvnetname }}"
-    subnet: "{{ subnetnic }}"
-    security_group: "{{ securitygroupnic }}"
-    state: "{{ status }}"
-    ip_configurations
-      - name: "{{ vmname1 }}ipconf"
-        load_balancer_backend_address_pools: "{{ backendpoolname }}"
+- name: Include webserver Vars
+  include_vars:
+    file: webserver_vars.yml
 
-- name: Aanmaken "{{ vmname2 }}" nic
+- name: Maken Network Security Groep voor Webservers
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ item.nsgname}}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 100
+        direction: inbound
+  with_items: "{{ nsgs.web }}"
+
+- name: Maken nics
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ vmname2 }}nic"
-    virtual_network: "{{ newvnetname }}"
-    subnet: "{{ subnetnic }}"
-    security_group: "{{ securitygroupnic }}"
-    state: "{{ status }}"
-    ip_configurations
-      - name: "{{ vmname2 }}ipconf"
-        load_balancer_backend_address_pools: "{{ backendpoolname }}"
+    name: "{{ item.name }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: "{{ item.websubnet}}"
+    security_group: "{{ item.nsg}}"
+  with_items:
+    - "{{ nsgs.web }}"
+    - "{{ nics.web }}"
+
+
+- name: Maken VM
+  azure_rm_virtualmachine:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ item.name }}"
+    vm_size: "{{ item.vmsize }}"
+    admin_username: "{{ item.adminusername }}"
+    admin_password: "{{ item.adminpassword }}"
+    network_interfaces: "{{ item.networkinterfaces }}"
+    managed_disk_type: "{{ item.manageddisktype }}"
+    image:
+      offer: "{{ item.os }}"
+      publisher: "{{ item.publish }}"
+      sku: "{{ item.type }}"
+      version: "{{ item.versie }}"
+    remove_on_absent: ["all"]
+    state: "{{ item.status }}"
+  with_items: "{{ vms.web }}"

@@ -1,0 +1,40 @@
+nsgs:
+  web:
+  - nsgname: nsgweb01
+  - nsgname: nsgweb02
+
+nics:
+  web:
+  - name: nicweb01
+    websubnet: Front-End
+    
+
+  - name: nicweb02
+    websubnet: Front-End
+
+vms:
+  web:
+  - name: web01
+    nicname: web01nic
+    vmsize: Standard_B2s
+    adminusername: rens
+    adminpassword: Welkom123!
+    networkinterfaces: web01nic
+    manageddisktype: Standard_LRS
+    os: UbuntuServer
+    publish: Canonical
+    type: 16.04-LTS
+    versie: latest
+    status: present
+
+  - name: vm02rens
+    vmsize: Standard_B2s
+    adminusername: rens
+    adminpassword: Welkom123!
+    networkinterfaces: vm02nic
+    manageddisktype: Standard_LRS
+    os: UbuntuServer
+    publish: Canonical
+    type: 16.04-LTS
+    versie: latest
+    status: present
