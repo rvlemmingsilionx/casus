@@ -4,6 +4,6 @@
   tasks:
     - name: verwijderen disk
       azure_rm_manageddisk:
-        name: vm01rens
+        name: variables.vmnaam
         resource_group: A2S2_GROEP_03
         state: absent

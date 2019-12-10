@@ -1,6 +1,16 @@
 - name: Include network vars
   include_vars:
     file: network_vars.yml
+  tags:
+  - vnet
+  - subnet
+  - frontendnsg
+  - backendnsg
+  - managementnsg
+  - frontendsubnet
+  - backendsubnet
+  - managementsubnet
+  - nsgs
 
 - name: Aanmaken Vnet
   azure_rm_virtualnetwork:
@@ -9,6 +19,8 @@
     address_prefixes_cidr:
       - "{{ vnetprefix }}"
     state: "{{ status }}"
+  tags:
+  - vnet
 
 - name: Toevoegen Front-End NSG
   azure_rm_securitygroup:
@@ -21,7 +33,10 @@
         access: Allow
         priority: "{{ priorityhttpfront }}"
         direction: Inbound
-    state: "{{ status }}"
+    state: absent
+  tags:
+  - frontendnsg
+  - nsgs
 
 
 - name: Toevoegen Back-end NSG
@@ -36,6 +51,9 @@
         priority: "{{ prioritysshback }}"
         direction: Inbound
     state: "{{ status }}"
+  tags:
+  - backendnsg
+  - nsgs
 
 - name: Toevoegen Management NSG
   azure_rm_securitygroup:
@@ -49,6 +67,9 @@
         priority: "{{ prioritysshman }}"
         direction: Inbound
     state: "{{ status }}"
+  tags:
+  - managementnsg
+  - nsgs
 
 - name: Toevoegen Frond-end Subnet
   azure_rm_subnet:
@@ -58,6 +79,9 @@
     virtual_network: "{{ vnetname }}"
     state: "{{ status }}"
     security_group: "{{ nsgfrontendname }}"
+  tags:
+  - frontendsubnet
+  - subnet
 
 - name: Toevoegen Backend Subnet
   azure_rm_subnet:
@@ -67,6 +91,9 @@
     virtual_network: "{{ vnetname }}"
     state: "{{ status }}"
     security_group: "{{ nsgbackendname }}"
+  tags:
+  - backendsubnet
+  - subnet
 
 - name: Toevoegen Management Subnet
   azure_rm_subnet:
@@ -76,3 +103,6 @@
     virtual_network: "{{ vnetname }}"
     state: "{{ status }}"
     security_group: "{{ nsgmanagementname }}"
+  tags:
+  - managementsubnet
+  - subnet

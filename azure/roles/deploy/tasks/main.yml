@@ -1,7 +1,6 @@
 ---
-#  - include: network.yml
-#  - include: availabilityset.yml
-#  - include: loadbalancer.yml
+  - include: network.yml
+  - include: loadbalancer.yml
   - include: webserver.yml
 #  - include: beheerserver.yml
 #  - include: nfsserver.yml

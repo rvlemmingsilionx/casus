@@ -1,18 +1,9 @@
 ---
 - hosts: localhost
   connection: local
-  vars_prompt:
-
-    - name: resourcegroup
-      prompt: "Wat is de resource groep?"
-      private: no
-
-    - name: availabset
-      prompt: "Wat is de naam van de nieuwe availability-set?"
-      private: no
-
   tasks:
     - name: Aanmaken Availability-set
       azure_rm_availabilityset:
-        name: "{{ availabset }}"
-        resource_group: "{{ resourcegroup }}"
+        name: availabilityset1
+        resource_group: A2S2_GROEP_03
+        state: absent

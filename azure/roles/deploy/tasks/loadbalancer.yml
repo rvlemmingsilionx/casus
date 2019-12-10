@@ -1,6 +1,9 @@
 - name: Include Loadbalancer Vars
   include_vars:
     file: loadbalancer_vars.yml
+  tags:
+  - loadbalancerip
+  - loadbalancer
 
 - name: Aanmaken loadbalancer IP
   azure_rm_publicipaddress:
@@ -8,34 +11,27 @@
     name: "{{ loadbalancerip }}"
     allocation_method: static
     state: "{{ status }}"
-
+  tags:
+  - loadbalancerip
 - name: Aanmaken Loadbalancer
   azure_rm_loadbalancer:
     resource_group: "{{ resourcegroup }}"
     name: "{{ loadbalancername }}"
     sku: Basic
     state: "{{ status }}"
-    frontend_ip_configurations:
-      - name: "{{ feipconf }}"
-        public_ip_address: "{{ loadbalancerip }}"
-    backend_address_pools:
-      - name: "{{ backendpoolname }}"
-    probes:
-      - name: "{{ probename }}"
-        port: 80
-        protocol: Http
-        request_path: /
-    inbound_nat_pools:
-      - name: "{{ inboundnatpoolname }}"
-        frontend_ip_configuration_name: "{{ feipconf }}"
-        protocol: Tcp
-        frontend_port_range_start: 80
-        frontend_port_range_end: 81
-        backend_port: 80
-    load_balancing_rules:
-      - name: "{{ lbrulename }}"
-        frontend_ip_configuration: "{{ feipconf }}"
-        backend_address_pool: "{{ backendpoolname }}"
-        frontend_port: 80
-        backend_port: 80
-        probe: "{{ probename }}"
+    public_ip: "{{ loadbalancerip }}"
+    probe_protocol: Tcp
+    probe_port: 80
+    probe_interval: 10
+    probe_fail_count: 3
+    protocol: Tcp
+    load_distribution: Default
+    frontend_port: 80
+    backend_port: 80
+    idle_timeout: 4
+    natpool_frontend_port_start: 50000
+    natpool_frontend_port_end: 50040
+    natpool_backend_port: 22
+    natpool_protocol: Tcp
+  tags:
+  - loadbalancer

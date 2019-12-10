@@ -15,28 +15,7 @@ nics:
     nsg: nsgweb02
     ipconfig: ipconfigweb02
 
-vms:
-  web:
-  - name: web01
-    vmsize: Standard_B2s
-    adminusername: rens
-    adminpassword: Welkom123!
-    networkinterfaces: nicweb01
-    manageddisktype: Standard_LRS
-    os: UbuntuServer
-    publish: Canonical
-    type: 16.04-LTS
-    versie: latest
-    status: present
+vmscalesetname: Webscaleset01
+vmscalesetnamensg: Webscaleset01NSG
 
-  - name: web01
-    vmsize: Standard_B2s
-    adminusername: rens
-    adminpassword: Welkom123!
-    networkinterfaces: nicweb02
-    manageddisktype: Standard_LRS
-    os: UbuntuServer
-    publish: Canonical
-    type: 16.04-LTS
-    versie: latest
-    status: present
+status: present

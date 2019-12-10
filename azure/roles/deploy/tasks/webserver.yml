@@ -1,50 +1,58 @@
 - name: Include webserver Vars
   include_vars:
     dir: vars
+  tags:
+  - scaleset
+  - nsgscaleset
 
-- name: Maken Network Security Groep voor Webservers
+
+- name: Create Network Security Group that allows SSH
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ item.nsgname}}"
+    name: "{{ vmscalesetnamensg }}"
+    state: "{{ status }}"
     rules:
       - name: SSH
         protocol: Tcp
         destination_port_range: 22
         access: Allow
-        priority: 100
+        priority: 1001
         direction: Inbound
-  with_items: "{{ nsgs.web }}"
+  tags:
+  - nsgscaleset
 
-- name: Maken nics
-  azure_rm_networkinterface:
+- name: Create Scale Set
+  azure_rm_virtualmachinescaleset:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ item.nicname }}"
-    virtual_network: "{{ vnetname }}"
-    subnet: "{{ item.websubnet}}"
-    security_group: "{{ item.nsg}}"
-    ip_configurations:
-      - name: "{{ item.ipconfig }}"
-        load_balancer_backend_address_pools:
-          - "{{ loadbalancer1.state.backend_address_pools[0].id }}"
-          - name: "{{ backendpoolname }}"
-            load_balancer: loadbalancer01
-  with_items: "{{ nics.web }}"
-
-
-- name: Maken VM
-  azure_rm_virtualmachine:
-    resource_group: "{{ resourcegroup }}"
-    name: "{{ item.name }}"
-    vm_size: "{{ item.vmsize }}"
-    admin_username: "{{ item.adminusername }}"
-    admin_password: "{{ item.adminpassword }}"
-    network_interfaces: "{{ item.networkinterfaces }}"
-    managed_disk_type: "{{ item.manageddisktype }}"
+    name: "{{ vmscalesetname }}"
+    state: "{{ status }}"
+    vm_size: Standard_B2s
+    admin_username: rens
+    ssh_public_keys:
+    - path: /home/rens/.ssh/authorized_keys
+      key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkmWSTuffptdRVkDsiO0IvfpFIj2NFW5e0YxmsiygUDQ8by8tUx7foD0AjruJiEOKoTBm5AymGkUTT84WuD5MvSJT1xxnirBQd7ACm6R1gvTTOs3Xy+cEORW1bT6g+AgSnv1soizxOk94fiE78n0RCCuwk0ArXv1VZUe0PaUVJ07mOyuON1uu+jjYQrxLDw6S6rl2+30MYACZVIhDt4r/T+GjAwMYHgpkkgmPVDNMZPIJFSSyG2e/B8+G1ylOsAkYql0unBaJEpliDDnlPtwrX96O5ti9R2X3pRpmF4dB6r6YWc7EKv/onx/myHIEuaPPWagcZogdD1beOtO4/RjiP rens@rens-virtual-machine
+    ssh_password_enabled: false
+    capacity: 2
+    virtual_network_name: "{{ vnetname }}"
+    subnet_name: "{{ frontendsubnetname }}"
+    upgrade_policy: Manual
+    tier: Standard
+    managed_disk_type: Standard_LRS
+    os_disk_caching: ReadWrite
     image:
-      offer: "{{ item.os }}"
-      publisher: "{{ item.publish }}"
-      sku: "{{ item.type }}"
-      version: "{{ item.versie }}"
-    remove_on_absent: ["all"]
-    state: "{{ item.status }}"
-  with_items: "{{ vms.web }}"
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    load_balancer: "{{ loadbalancername }}"
+    data_disks:
+      - lun: 0
+        disk_size_gb: 20
+        managed_disk_type: Standard_LRS
+        caching: ReadOnly
+      - lun: 1
+        disk_size_gb: 30
+        managed_disk_type: Standard_LRS
+        caching: ReadOnly
+  tags:
+  -  scaleset
