@@ -33,7 +33,7 @@
         access: Allow
         priority: "{{ priorityhttpfront }}"
         direction: Inbound
-    state: absent
+    state: "{{ status }}"
   tags:
   - frontendnsg
   - nsgs
