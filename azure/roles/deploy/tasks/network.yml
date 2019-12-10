@@ -1,6 +1,6 @@
 - name: Include network vars
   include_vars:
-    file: network_vars.yml
+    dir: vars
   tags:
   - vnet
   - subnet
@@ -33,7 +33,7 @@
         access: Allow
         priority: "{{ priorityhttpfront }}"
         direction: Inbound
-    state: "{{ status }}"
+    state: absent
   tags:
   - frontendnsg
   - nsgs
@@ -78,7 +78,7 @@
     address_prefix: "{{ frontsubnetpfx }}"
     virtual_network: "{{ vnetname }}"
     state: "{{ status }}"
-    security_group: "{{ nsgfrontendname }}"
+#    security_group: "{{ nsgfrontendname }}"
   tags:
   - frontendsubnet
   - subnet
