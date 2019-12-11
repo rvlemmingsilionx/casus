@@ -27,10 +27,10 @@
     name: "{{ vmscalesetname }}"
     state: "{{ status }}"
     vm_size: Standard_B2s
-    admin_username: rens
+    admin_username: "{{ adminname }}"
     ssh_public_keys:
-    - path: /home/rens/.ssh/authorized_keys
-      key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkmWSTuffptdRVkDsiO0IvfpFIj2NFW5e0YxmsiygUDQ8by8tUx7foD0AjruJiEOKoTBm5AymGkUTT84WuD5MvSJT1xxnirBQd7ACm6R1gvTTOs3Xy+cEORW1bT6g+AgSnv1soizxOk94fiE78n0RCCuwk0ArXv1VZUe0PaUVJ07mOyuON1uu+jjYQrxLDw6S6rl2+30MYACZVIhDt4r/T+GjAwMYHgpkkgmPVDNMZPIJFSSyG2e/B8+G1ylOsAkYql0unBaJEpliDDnlPtwrX96O5ti9R2X3pRpmF4dB6r6YWc7EKv/onx/myHIEuaPPWagcZogdD1beOtO4/RjiP rens@rens-virtual-machine
+    - path: /home/"{{adminname}}"/.ssh/authorized_keys
+      key_data: "{{ sshkey }}"
     ssh_password_enabled: false
     capacity: 2
     virtual_network_name: "{{ vnetname }}"
@@ -48,10 +48,6 @@
     data_disks:
       - lun: 0
         disk_size_gb: 20
-        managed_disk_type: Standard_LRS
-        caching: ReadOnly
-      - lun: 1
-        disk_size_gb: 30
         managed_disk_type: Standard_LRS
         caching: ReadOnly
   tags:

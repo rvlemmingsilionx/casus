@@ -3,4 +3,5 @@
   - include: loadbalancer.yml
   - include: webserver.yml
 #  - include: beheerserver.yml
-#  - include: nfsserver.yml
+  - include: nfsserver.yml
+  - include: powerstate.yml

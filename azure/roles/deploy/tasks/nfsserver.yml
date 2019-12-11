@@ -1,0 +1,68 @@
+- name: Include Vars
+  include_vars:
+    dir: vars
+  tags:
+  - nfsnic
+  - nfsnsg
+  - nfsvm
+  - nfs
+
+- name: Create public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ resourcegroup }}"
+    allocation_method: Static
+    name: publicipnfs
+    state: "{{ status }}"
+  tags:
+  - nfs
+
+- name: Create Network Security Group that allows SSH
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ nfsnsgname }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    state: "{{ status }}"
+  tags:
+    - nfsnsg
+    - nfs
+
+- name: Create virtual network interface card
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ nfsnicname }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: "{{ backendsubnetname }}"
+    security_group: "{{ nfsnsgname }}"
+    public_ip_name: publicipnfs
+    state: "{{ status }}"
+  tags:
+    - nfsnic
+    - nfs
+
+- name: Aanmaken VM
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: vm01
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ nfsnicname }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: "{{ status }}"
+  tags:
+  - nfsvm
+  - nfs
