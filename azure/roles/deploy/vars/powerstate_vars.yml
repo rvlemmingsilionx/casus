@@ -1,1 +1,5 @@
 powerstate: running
+vms:
+  vmss:
+  - instanceid: 0
+  - instanceid: 1

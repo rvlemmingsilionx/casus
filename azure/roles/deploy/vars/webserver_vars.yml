@@ -1,20 +1,3 @@
-nsgs:
-  web:
-  - nsgname: nsgweb01
-  - nsgname: nsgweb02
-
-nics:
-  web:
-  - nicname: nicweb01
-    websubnet: Front-End
-    nsg: nsgweb01
-    ipconfig: ipconfigweb01
-
-  - nicname: nicweb02
-    websubnet: Front-End
-    nsg: nsgweb02
-    ipconfig: ipconfigweb02
-
 vmscalesetname: Webscaleset01
 vmscalesetnamensg: Webscaleset01NSG
 

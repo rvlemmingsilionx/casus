@@ -1,6 +1,6 @@
 - name: Include Loadbalancer Vars
   include_vars:
-    file: loadbalancer_vars.yml
+    dir: vars
   tags:
   - loadbalancerip
   - loadbalancer
@@ -13,6 +13,7 @@
     state: "{{ status }}"
   tags:
   - loadbalancerip
+
 - name: Aanmaken Loadbalancer
   azure_rm_loadbalancer:
     resource_group: "{{ resourcegroup }}"

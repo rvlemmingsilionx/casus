@@ -9,6 +9,7 @@
     resource_group: "{{ resourcegroup }}"
     vmss_name: "{{ vmscalesetname }}"
     power_state: "{{ powerstate }}"
-    instance_id: "0"
+    instance_id: "{{item.instanceid}}"
+  with_items: "{{vms.vmss}}"
   tags:
   - powerstate
