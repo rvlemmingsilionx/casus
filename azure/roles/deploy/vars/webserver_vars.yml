@@ -1,4 +1,3 @@
 vmscalesetname: Webscaleset01
-vmscalesetnamensg: Webscaleset01NSG
 
 status: present

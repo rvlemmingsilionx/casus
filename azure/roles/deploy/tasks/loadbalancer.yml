@@ -8,7 +8,7 @@
 - name: Aanmaken loadbalancer IP
   azure_rm_publicipaddress:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ loadbalancerip }}"
+    name: "{{ loadbalancername }}"
     allocation_method: static
     state: "{{ status }}"
   tags:
@@ -20,7 +20,7 @@
     name: "{{ loadbalancername }}"
     sku: Basic
     state: "{{ status }}"
-    public_ip: "{{ loadbalancerip }}"
+    public_ip: "{{ loadbalancername }}"
     probe_protocol: Tcp
     probe_port: 80
     probe_interval: 10

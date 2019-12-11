@@ -1,3 +1,2 @@
-nfsnsgname: NFSServer01
-nfsnicname: nfsnic01
+nfsname: NFSServer01
 status: present

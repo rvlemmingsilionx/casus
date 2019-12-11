@@ -7,19 +7,21 @@
   - nfsvm
   - nfs
 
+
 - name: Create public IP address
   azure_rm_publicipaddress:
     resource_group: "{{ resourcegroup }}"
     allocation_method: Static
-    name: publicipnfs
+    name: "{{ nfsname }}"
     state: "{{ status }}"
   tags:
   - nfs
+  - nfsip
 
 - name: Create Network Security Group that allows SSH
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ nfsnsgname }}"
+    name: "{{ nfsname }}"
     rules:
       - name: SSH
         protocol: Tcp
@@ -35,11 +37,13 @@
 - name: Create virtual network interface card
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ nfsnicname }}"
+    name: "{{ nfsname }}"
     virtual_network: "{{ vnetname }}"
     subnet: "{{ backendsubnetname }}"
-    security_group: "{{ nfsnsgname }}"
-    public_ip_name: publicipnfs
+    security_group: "{{ nfsname }}"
+    public_ip_name: "{{ nfsname }}"
+    private_ip_address: "{{ nfsip }}"
+    private_ip_allocation_method: static
     state: "{{ status }}"
   tags:
     - nfsnic
@@ -48,14 +52,14 @@
 - name: Aanmaken VM
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03
-    name: vm01
+    name: "{{ nfsname }}"
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ nfsnicname }}"
+    network_interfaces: "{{ nfsname }}"
     managed_disk_type: Standard_LRS
     image:
       offer: UbuntuServer

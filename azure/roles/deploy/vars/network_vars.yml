@@ -23,3 +23,7 @@ destportsshman: 22
 prioritysshman: 100
 
 status: present
+
+# IP address configuratie per node #
+beheerip: 10.0.2.5
+nfsip: 10.0.1.5

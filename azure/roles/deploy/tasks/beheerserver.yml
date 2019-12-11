@@ -1,0 +1,72 @@
+- name: Include Vars
+  include_vars:
+    dir: vars
+  tags:
+  - beheernic
+  - beheernsg
+  - beheervm
+  - beheer
+  - beheerip
+
+- name: Create public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ resourcegroup }}"
+    allocation_method: Static
+    name: "{{ beheernaam }}"
+    state: "{{ status }}"
+  tags:
+  - beheer
+  - beheerip
+
+- name: Create Network Security Group that allows SSH
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ beheernaam }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    state: "{{ status }}"
+  tags:
+    - beheernsg
+    - beheer
+
+- name: Create virtual network interface card
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ beheernaam }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: "{{ managementsubnetname }}"
+    security_group: "{{ beheernaam }}"
+    public_ip_name: "{{ beheernaam }}"
+    private_ip_allocation_method: Static
+    private_ip_address: "{{ beheerip }}"
+    state: "{{ status }}"
+  tags:
+    - beheernic
+    - beheer
+
+- name: Aanmaken VM Beheernode
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: "{{ beheernaam }}"
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ beheernaam }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: "{{ status }}"
+  tags:
+  - beheervm
+  - beheer
