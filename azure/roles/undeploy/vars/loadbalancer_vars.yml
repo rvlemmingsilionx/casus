@@ -1,3 +1,4 @@
 status: present
 
 loadbalancername: Loadbalancer
+lbrulename: rule

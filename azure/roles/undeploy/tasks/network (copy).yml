@@ -1,0 +1,108 @@
+- name: Include network vars
+  include_vars:
+    dir: vars
+  tags:
+  - vnet
+  - subnet
+  - frontendnsg
+  - backendnsg
+  - managementnsg
+  - frontendsubnet
+  - backendsubnet
+  - managementsubnet
+  - nsgs
+
+- name: Aanmaken Vnet
+  azure_rm_virtualnetwork:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ vnetname }}"
+    address_prefixes_cidr:
+      - "{{ vnetprefix }}"
+    state: "{{ status }}"
+  tags:
+  - vnet
+
+- name: Toevoegen Front-End NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ nsgfrontendname }}"
+    rules:
+      - name: HTTP
+        protocol: Tcp
+        destination_port_range: "{{ destporthttpfront }}"
+        access: Allow
+        priority: "{{ priorityhttpfront }}"
+        direction: Inbound
+    state: absent
+  tags:
+  - frontendnsg
+  - nsgs
+
+
+- name: Toevoegen Back-end NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ nsgbackendname }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: "{{ destportsshback }}"
+        access: Allow
+        priority: "{{ prioritysshback }}"
+        direction: Inbound
+    state: "{{ status }}"
+  tags:
+  - backendnsg
+  - nsgs
+
+- name: Toevoegen NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ item.nsgname }}"
+    rules:
+      - name: "{{ item.rulename }}"
+        protocol: "{{ item.protocol }}"
+        destination_port_range: "{{ item.destportrange }}"
+        access: "{{ item.access }}"
+        priority: "{{ item.priority }}"
+        direction: "{{ item.direction}}"
+    state: "{{ status }}"
+  tags:
+  - nsgs
+
+- name: Toevoegen Frond-end Subnet
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ item.subnetname }}"
+    address_prefix: "{{ item.prefix }}"
+    virtual_network: "{{ vnetname }}"
+    state: "{{ status }}"
+    security_group: "{{ nsgfrontendname }}"
+  with_items: "{{ network.subnets }}"
+  tags:
+  - frontendsubnet
+  - subnet
+
+- name: Toevoegen Backend Subnet
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ backendsubnetname }}"
+    address_prefix: "{{ backsubnetpfx }}"
+    virtual_network: "{{ vnetname }}"
+    state: "{{ status }}"
+    security_group: "{{ nsgbackendname }}"
+  tags:
+  - backendsubnet
+  - subnet
+
+- name: Toevoegen Management Subnet
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ managementsubnetname }}"
+    address_prefix: "{{ managementsubnetpfx }}"
+    virtual_network: "{{ vnetname }}"
+    state: "{{ status }}"
+    security_group: "{{ nsgmanagementname }}"
+  tags:
+  - managementsubnet
+  - subnet

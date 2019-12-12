@@ -5,7 +5,6 @@
   - vnet
   - subnet
   - subnetnsg
-  - network
 
 - name: Aanmaken Vnet
   azure_rm_virtualnetwork:
@@ -16,7 +15,6 @@
     state: "{{ status }}"
   tags:
   - vnet
-  - network
 
 - name: Toevoegen NSG
   azure_rm_securitygroup:
@@ -33,7 +31,6 @@
   with_items: "{{ network.nsgs}}"
   tags:
   - subnetnsg
-  - network
 
 - name: Toevoegen Subnets
   azure_rm_subnet:
@@ -46,4 +43,3 @@
   with_items: "{{ network.subnets }}"
   tags:
   - subnet
-  - network

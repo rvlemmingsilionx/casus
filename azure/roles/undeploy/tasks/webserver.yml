@@ -19,7 +19,6 @@
         priority: 1001
         direction: Inbound
   tags:
-  - scaleset
   - nsgscaleset
 
 - name: Create Scale Set
@@ -30,12 +29,12 @@
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
     ssh_public_keys:
-      - path: /home/{{ adminname }}/.ssh/authorized_keys
-        key_data: "{{ sshkey }}"
+    - path: /home/"{{adminname}}"/.ssh/authorized_keys
+      key_data: "{{ sshkey }}"
     ssh_password_enabled: false
     capacity: 2
     virtual_network_name: "{{ vnetname }}"
-    subnet_name: Front-End
+    subnet_name: "{{ frontendsubnetname }}"
     upgrade_policy: Manual
     tier: Standard
     managed_disk_type: Standard_LRS

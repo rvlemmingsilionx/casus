@@ -1,0 +1,72 @@
+- name: Include Vars
+  include_vars:
+    dir: vars
+  tags:
+  - beheernic
+  - beheernsg
+  - beheervm
+  - beheerdel
+  - beheerip
+
+- name: Delete VM Beheernode
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: "{{ beheernaam }}"
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ beheernaam }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: absent
+  tags:
+  - beheervm
+  - beheerdel
+
+- name: Delete virtual network interface card
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ beheernaam }}"
+    state: absent
+    virtual_network: "{{ vnetname }}"
+    subnet: "{{  }}"
+    security_group: "{{ beheernaam }}"
+    public_ip_name: "{{ beheernaam }}"
+    private_ip_allocation_method: Static
+    private_ip_address: "{{ beheerip }}"
+  tags:
+    - beheernic
+    - beheerdel
+
+- name: Delete public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ resourcegroup }}"
+    allocation_method: Static
+    name: "{{ beheernaam }}"
+    state: absent
+  tags:
+  - beheerdel
+  - beheerip
+
+- name: Delete Network Security Group that allows SSH
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ beheernaam }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    state: absent
+  tags:
+    - beheernsg
+    - beheerdel

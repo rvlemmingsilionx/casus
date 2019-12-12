@@ -1,0 +1,3 @@
+- name: Get vars
+  include_vars:
+    dir: vars

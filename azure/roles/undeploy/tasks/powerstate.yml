@@ -1,0 +1,15 @@
+- name: Include Powerstate Vars
+  include_vars:
+    dir: vars
+  tags:
+  - powerstate
+
+- name: Shutdown VirtualMachineScaleSet
+  azure_rm_virtualmachinescalesetinstance:
+    resource_group: "{{ resourcegroup }}"
+    vmss_name: "{{ vmscalesetname }}"
+    power_state: "{{ powerstate }}"
+    instance_id: "{{item.instanceid}}"
+  with_items: "{{vms.vmss}}"
+  tags:
+  - powerstate

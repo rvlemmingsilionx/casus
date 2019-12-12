@@ -4,5 +4,4 @@
   - include: webserver.yml
   - include: beheerserver.yml
   - include: nfsserver.yml
-  - include: backupserver.yml
   - include: powerstate.yml
