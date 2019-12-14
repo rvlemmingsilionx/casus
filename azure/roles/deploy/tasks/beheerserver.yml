@@ -67,6 +67,8 @@
       sku: 16.04-LTS
       version: latest
     state: "{{ status }}"
+    started: "{{ gestart }}"
+
   tags:
   - managementvm
   - management
