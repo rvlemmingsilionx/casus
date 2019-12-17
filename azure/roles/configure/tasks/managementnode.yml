@@ -43,3 +43,4 @@
     git:
       repo: https://gitlab.com/groep-3-devops/casus.git
       dest: /home/rens/casus/
+    become: no
