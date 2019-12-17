@@ -1,5 +1,45 @@
-- name: Get vars
-  include_vars:
-    dir: vars
+---
+- hosts: management
 
-- name: Install python 2
+  tasks:
+  - name: Get vars
+    include_vars:
+      dir: ../vars
+
+  - name: Copy Private SSH Key
+    copy:
+      src: ../files/id_rsa
+      dest: /home/rens/.ssh/id_rsa
+      owner: "rens"
+      group: "rens"
+      mode: '600'
+
+
+  - name: Adding the Ansible repository
+    apt_repository:
+      repo: ppa:ansible/ansible
+    become: yes
+
+  - name: Upgrade all packages to latest version
+    apt:
+      name: "*"
+      state: latest
+    become: yes
+
+  - name: Install Ansible and Tools
+    apt:
+      pkg:
+      - software-properties-common
+      - ansible
+      - git
+    become: yes
+
+  - name: Run the equivalent of "apt-get update" as a separate step
+    apt:
+      update_cache: yes
+    become: yes
+
+  - name: Get GIT repo from Gitlab
+    git:
+      repo: https://gitlab.com/groep-3-devops/casus.git
+      dest: /home/rens/casus/
