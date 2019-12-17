@@ -2,4 +2,8 @@
   include_vars:
     dir: vars
 
--
+- name: Install apache2
+  apt:
+    pkg:
+    - apache2
+  become: yes

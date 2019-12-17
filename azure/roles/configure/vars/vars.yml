@@ -1,5 +1,5 @@
 admpass: Goldshopper1
 uusername: ansibleuser
 ansible_become_password: Goldshopper1
-ansible_become: True
+ansible_become: true
 ansible_become_pass: Goldshopper1
