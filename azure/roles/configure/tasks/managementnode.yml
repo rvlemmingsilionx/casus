@@ -1,51 +1,47 @@
----
-- hosts: management
+- name: Get vars
+  include_vars:
+    dir: ../vars
 
-  tasks:
-  - name: Get vars
-    include_vars:
-      dir: ../vars
-
-  - name: Copy Private SSH Key
-    copy:
-      src: ../files/id_rsa
-      dest: /home/rens/.ssh/id_rsa
-      owner: "rens"
-      group: "rens"
-      mode: '600'
+- name: Copy Private SSH Key
+  copy:
+    src: ../files/id_rsa
+    dest: /home/rens/.ssh/id_rsa
+    owner: "rens"
+    group: "rens"
+    mode: '600'
 
 
-  - name: Adding the Ansible repository
-    apt_repository:
-      repo: ppa:ansible/ansible
-    become: yes
+- name: Adding the Ansible repository
+  apt_repository:
+    repo: ppa:ansible/ansible
+  become: yes
 
-  - name: Upgrade all packages to latest version
-    apt:
-      name: "*"
-      state: latest
-    become: yes
+- name: Upgrade all packages to latest version
+  apt:
+    name: "*"
+    state: latest
+  become: yes
 
-  - name: Install Ansible and Tools
-    apt:
-      pkg:
-      - software-properties-common
-      - ansible
-      - git
-    become: yes
+- name: Install Ansible and Tools
+  apt:
+    pkg:
+    - software-properties-common
+    - ansible
+    - git
+  become: yes
 
-  - name: Run the equivalent of "apt-get update" as a separate step
-    apt:
-      update_cache: yes
-    become: yes
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+  become: yes
 
-  - name: Get GIT repo from Gitlab
-    raw: git clone https://gitlab.com/groep-3-devops/casus.git
-    become: false
+- name: Get GIT repo from Gitlab
+  raw: git clone https://gitlab.com/groep-3-devops/casus.git
+  become: false
 
-  - name: Change GIT folder ownership
-    file:
-      path: /home/rens/casus
-      owner: rens
-      group: rens
-      mode: '777'
+- name: Change GIT folder ownership
+  file:
+    path: /home/rens/casus
+    owner: rens
+    group: rens
+    mode: '777'
