@@ -5,16 +5,19 @@
   roles:
     - deploy
   tasks:
-    - set_fact:
-        azure_state: "deployed"
-        cacheable: yes
+    - name: Set azure_state Deployed
+      lineinfile:
+        path: group_vars/all
+        regexp: '^azure_state:'
+        line: 'azure_state: deployed'
+    - name: debug
+      debug:
+        msg: "{{ azure_state }}"
 
 - hosts: confmanagementnode
   gather_facts: true
-  tasks:
-    - debug: var=ansible_facts
-#  roles:
-#    - { role: mmnode, when: azure_state == "deployed" }
+  roles:
+    - { role: mmnode, when: azure_state == "deployed" }
 
 - hosts: allservers
   gather_facts: true
