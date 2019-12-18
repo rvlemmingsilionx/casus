@@ -1,6 +1,0 @@
-vmname1: apacheserver1
-securitygroupnic: Frond-End
-subnetnic: Front-End
-status1: present
-
-

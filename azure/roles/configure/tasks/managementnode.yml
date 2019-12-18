@@ -40,7 +40,12 @@
     become: yes
 
   - name: Get GIT repo from Gitlab
-    git:
-      repo: https://gitlab.com/groep-3-devops/casus.git
-      dest: /home/rens/casus/
-    become: no
+    raw: git clone https://gitlab.com/groep-3-devops/casus.git
+    become: false
+
+  - name: Change GIT folder ownership
+    file:
+      path: /home/rens/casus
+      owner: rens
+      group: rens
+      mode: '777'
