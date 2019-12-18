@@ -1,0 +1,4 @@
+- hosts: allservers
+  gather_facts: true
+  roles:
+    - configure

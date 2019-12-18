@@ -14,9 +14,16 @@
     allocation_method: Static
     name: "{{ managementnaam }}"
     state: "{{ status }}"
+  register: ip_address
   tags:
   - management
   - managementip
+
+- name: Show ip
+  debug:
+    msg: Het publieke IP van de management node is "{{ ip_address.state.ip_address }}"
+  tags:
+  - management
 
 - name: Create Network Security Group that allows SSH
   azure_rm_securitygroup:

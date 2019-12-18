@@ -9,7 +9,7 @@
     owner: "rens"
     group: "rens"
     mode: '600'
-
+  
 
 - name: Adding the Ansible repository
   apt_repository:

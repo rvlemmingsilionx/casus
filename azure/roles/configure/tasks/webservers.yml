@@ -2,8 +2,11 @@
   include_vars:
     dir: vars
 
-- name: Install apache2
+- name: Install apache2 on webservers
   apt:
     pkg:
     - apache2
+    - git
   become: yes
+  when:
+    - ansible_hostname == "web01" or ansible_hostname == "web02"
