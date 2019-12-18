@@ -6,4 +6,3 @@
   - include: nfsserver.yml
   - include: backupserver.yml
   - include: powerstate.yml
-  - include: configbeheerserver.yml

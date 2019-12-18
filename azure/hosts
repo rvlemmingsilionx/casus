@@ -4,6 +4,7 @@
 10.0.1.5
 10.0.1.6
 10.0.2.5
+localhost
 
 [webservers]
 10.0.0.4
@@ -17,6 +18,9 @@
 
 [managementnode]
 10.0.2.5
+
+[confmanagementnode]
+52.142.210.77
 
 [secret]
 10.0.0.4

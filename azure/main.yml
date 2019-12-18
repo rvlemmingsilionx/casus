@@ -4,6 +4,17 @@
   gather_facts: true
   roles:
     - deploy
+  tasks:
+    - set_fact:
+        azure_state: "deployed"
+        cacheable: yes
+
+- hosts: confmanagementnode
+  gather_facts: true
+  tasks:
+    - debug: var=ansible_facts
+#  roles:
+#    - { role: mmnode, when: azure_state == "deployed" }
 
 - hosts: allservers
   gather_facts: true

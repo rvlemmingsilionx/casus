@@ -9,7 +9,7 @@
     owner: "rens"
     group: "rens"
     mode: '600'
-  
+
 
 - name: Adding the Ansible repository
   apt_repository:
@@ -28,20 +28,19 @@
     - software-properties-common
     - ansible
     - git
-  become: yes
-
-- name: Run the equivalent of "apt-get update" as a separate step
-  apt:
     update_cache: yes
   become: yes
+
+- name: Check of GIT repo er al is
+  stat:
+    path: /home/rens/casus
+  register: stat_result
 
 - name: Get GIT repo from Gitlab
   raw: git clone https://gitlab.com/groep-3-devops/casus.git
   become: false
+  when: stat_result.stat.exists == False
 
 - name: Change GIT folder ownership
-  file:
-    path: /home/rens/casus
-    owner: rens
-    group: rens
-    mode: '777'
+  raw: chown -R rens:rens /home/rens/casus
+  when: stat_result.stat.exists == False

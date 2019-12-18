@@ -19,12 +19,12 @@
   - management
   - managementip
 
-- name: Show ip
-  debug:
-    msg: Het publieke IP van de management node is "{{ ip_address.state.ip_address }}"
-  tags:
-  - management
-
+- name: add ip to hostlist
+  lineinfile:
+    path: hosts
+    regexp: '^addipaddr'
+    line: "{{ ip_address.state.ip_address }}"
+    
 - name: Create Network Security Group that allows SSH
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
