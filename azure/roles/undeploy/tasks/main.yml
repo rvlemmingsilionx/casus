@@ -250,6 +250,19 @@
   tags:
   - loadbalancerip
   - loadbalancer
+  
+- name: Remove Subnets
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ item.subnetname }}"
+    address_prefix: "{{ item.prefix }}"
+    virtual_network: "{{ vnetname }}"
+    state: absent
+    security_group: "{{ item.securitygroup }}"
+  with_items: "{{ network.subnets }}"
+  tags:
+  - subnet
+  - network
 
 - name: Remove NSG
   azure_rm_securitygroup:
@@ -269,18 +282,6 @@
   - network
 
 
-- name: Remove Subnets
-  azure_rm_subnet:
-    resource_group: "{{ resourcegroup }}"
-    name: "{{ item.subnetname }}"
-    address_prefix: "{{ item.prefix }}"
-    virtual_network: "{{ vnetname }}"
-    state: absent
-    security_group: "{{ item.securitygroup }}"
-  with_items: "{{ network.subnets }}"
-  tags:
-  - subnet
-  - network
 
 - name: remove Vnet
   azure_rm_virtualnetwork:

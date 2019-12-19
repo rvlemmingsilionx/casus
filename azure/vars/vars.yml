@@ -2,10 +2,10 @@
 status: present
 
 # Webscaleset vars
-vmscalesetname: Webscaleset01
+vmscalesetname: Webscaleset
 
 # NFS server vars
-nfsname: NFSServer01
+nfsname: NFSServer
 
 # Loadbalancer vars
 loadbalancername: Loadbalancer
@@ -64,7 +64,7 @@ network:
     prefix: 10.0.1.0/24
     securitygroup: Back-End-NSG
     status: present
-    
+
   - subnetname: Management
     prefix: 10.0.2.0/24
     securitygroup: Management-NSG

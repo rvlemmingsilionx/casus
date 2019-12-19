@@ -1,4 +1,5 @@
 ---
+### Azure Deployment Role ###
 - hosts: localhost
   connection: local
   gather_facts: true
@@ -31,8 +32,13 @@
         groups: confmanagementnode
       when: choise == "y"
 
+### Managementnode Configuration role
 - hosts: confmanagementnode
   gather_facts: true
+  vars:
+    ansible_user: ansibleuser
+    ansible_connection: ssh
+
   vars_prompt:
     - name: choise
       prompt: "Wil je de management node inrichten? (y/n)"
@@ -47,22 +53,14 @@
 
   roles:
     - { role: mmnode, when: azure_state == "deployed" and choise == "y"}
-
-  tasks:
-    - name: Set azure_state Readytodeploy
-      lineinfile:
-        path: group_vars/all
-        regexp: '^azure_state:'
-        line: 'azure_state: RedyToDeploy'
-
-
+### Configuratie Role ###
 - hosts: allservers
-  gather_facts: true
+  gather_facts: false
   vars_prompt:
     - name: choise
-      prompt: "Wil je de complete infrastructuur inrichten?? (y/n)"
+      prompt: "Wil je de complete infrastructuur remote laten inrichten? (y/n)"
       private: no
-
+  ignore_errors: yes
   pre_tasks:
     - name: Include Vars
       include_vars: "{{ item }}"
@@ -73,9 +71,11 @@
   roles:
     - { role: configure, when: choise == "y"}
 
+### Undeployment Role ###
 - hosts: localhost
   connection: local
   gather_facts: true
+
   vars_prompt:
     - name: choise
       prompt: "Wil je de undeployment starten? (y/n)"
