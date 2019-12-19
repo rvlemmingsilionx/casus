@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Installeren NFS server
+      apt:
+        name: nfs-kernel-server
+        update_cache: yes
+
+    - name: Aanmaken NFS directory
+      file:
+        path: /srv/nfs-share
+        state: directory
+        mode: '0755'
+        owner: nobody
+        group: nogroup
+
+     - name: Server configureren
+       lineinfile:
+         path: /etc/exports
+         line: '/srv/nfs-share/{{ nfsip }}/24(rw,no_root_squash,no_subtree_check)'
+
+      - name: Configuratie afronden & herstarten
+        command: exportfs -r
+        service:
+          name: nfs-kernel-server
+          state: reload
+     
+   
