@@ -1,9 +1,20 @@
+- name: Create public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ resourcegroup }}"
+    allocation_method: Static
+    name: "{{ nfsname }}"
+    state: "{{ status }}"
+  register: ip_address
+  tags:
+  - nfs
+  - nfsip
+
 - name: Create Network Security Group that allows SSH
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
     name: "{{ nfsname }}"
     rules:
-      - name: SSH
+      - name: nfsname
         protocol: Tcp
         destination_port_range: 22
         access: Allow
@@ -20,24 +31,25 @@
     name: "{{ nfsname }}"
     virtual_network: "{{ vnetname }}"
     subnet: Back-End
-    security_group: "{{ nfsname }}"
-    private_ip_address: "{{ private_ip_nfs }}"
+    security_group: Back-End-NSG
+    public_ip_name: "{{ nfsname }}"
     private_ip_allocation_method: Static
+    private_ip_address: "{{ private_ip_nfs }}"
     state: "{{ status }}"
   tags:
     - nfsnic
     - nfs
 
-- name: Aanmaken VM
+- name: Aanmaken VM nfs-server
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03
     name: "{{ nfsname }}"
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
-    ssh_password_enabled: false
-    ssh_public_keys:
-      - path: /home/{{ adminname }}/.ssh/authorized_keys
-        key_data: "{{ sshkey }}"
+    nfsname_password_enabled: false
+    nfsname_public_keys:
+      - path: /home/{{ adminname }}/.nfsname/authorized_keys
+        key_data: "{{ nfsnamekey }}"
     network_interfaces: "{{ nfsname }}"
     managed_disk_type: Standard_LRS
     image:
@@ -51,3 +63,4 @@
   tags:
   - nfsvm
   - nfs
+
