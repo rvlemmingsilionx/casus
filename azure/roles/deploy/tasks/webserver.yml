@@ -1,11 +1,3 @@
-- name: Include webserver Vars
-  include_vars:
-    dir: vars
-  tags:
-  - scaleset
-  - nsgscaleset
-
-
 - name: Create Network Security Group that allows SSH
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"

@@ -2,24 +2,63 @@
 - hosts: localhost
   connection: local
   gather_facts: true
+
+  pre_tasks:
+    - name: Include Vars
+      include_vars: "{{ item }}"
+      with_items:
+        - 'vars/secret.yml'
+        - 'vars/vars.yml'
+
   roles:
     - deploy
+
   tasks:
     - name: Set azure_state Deployed
       lineinfile:
         path: group_vars/all
         regexp: '^azure_state:'
         line: 'azure_state: deployed'
+
+    - name: Add public ip of the managementnode to the group
+      add_host:
+        name: "{{ ip_address.state.ip_address }}"
+        groups: confmanagementnode
     - name: debug
       debug:
         msg: "{{ azure_state }}"
 
+
+
 - hosts: confmanagementnode
   gather_facts: true
+
+  pre_tasks:
+    - name: Include Vars
+      include_vars: "{{ item }}"
+      with_items:
+        - 'vars/secret.yml'
+        - 'vars/vars.yml'
+
   roles:
     - { role: mmnode, when: azure_state == "deployed" }
 
+  tasks:
+    - name: Set azure_state Readytodeploy
+      lineinfile:
+        path: group_vars/all
+        regexp: '^azure_state:'
+        line: 'azure_state: RedyToDeploy'
+
 - hosts: allservers
   gather_facts: true
+
+  pre_tasks:
+    - name: Include Vars
+      include_vars: "{{ item }}"
+      with_items:
+        - 'vars/secret.yml'
+        - 'vars/vars.yml'
+
   roles:
     - configure

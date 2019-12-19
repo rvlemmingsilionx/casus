@@ -1,12 +1,3 @@
-- name: Include Vars
-  include_vars:
-    dir: vars
-  tags:
-  - nfsnic
-  - nfsnsg
-  - nfsvm
-  - nfs
-
 - name: Create Network Security Group that allows SSH
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"

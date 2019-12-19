@@ -1,12 +1,3 @@
-- name: Include network vars
-  include_vars:
-    dir: vars
-  tags:
-  - vnet
-  - subnet
-  - subnetnsg
-  - network
-
 - name: Aanmaken Vnet
   azure_rm_virtualnetwork:
     resource_group: "{{ resourcegroup }}"

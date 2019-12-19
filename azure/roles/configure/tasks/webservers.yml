@@ -1,12 +1,13 @@
-- name: Get vars
-  include_vars:
-    dir: vars
-
-- name: Install apache2 on webservers
+- name: Install packages
   apt:
     pkg:
     - apache2
-    - git
+    - nfs-common
   become: yes
+  when:
+    - ansible_hostname == "web01" or ansible_hostname == "web02"
+
+- name: Mount NFS folder at boot
+  raw: '"{{ nfsip }}":/home/"{{ uusername }}"/webfiles   /var/www/html   nfs    auto  0  0'
   when:
     - ansible_hostname == "web01" or ansible_hostname == "web02"

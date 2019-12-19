@@ -20,7 +20,7 @@ localhost
 192.168.179.133
 
 [confmanagementnode]
-52.142.210.77
+addipaddr
 
 [secret]
 192.168.179.134

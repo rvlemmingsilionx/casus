@@ -1,14 +1,37 @@
-# Network configuratie
-vnetname: MyVnet
-vnetprefix: 10.0.0.0/16
-
-#Status
+# Status vars
 status: present
+
+# Webscaleset vars
+vmscalesetname: Webscaleset01
+
+# NFS server vars
+nfsname: NFSServer01
+
+# Loadbalancer vars
+loadbalancername: Loadbalancer
+
+# Managementnode vars
+managementnaam: Managementnode
+gestart: yes
+
+# BackupServer Vars
+backupname: Backupserver01
+
+# Powerstate Vars
+powerstate: running
+vms:
+  vmss:
+  - instanceid: 0
+  - instanceid: 1
 
 # IP address configuratie per node #
 private_ip_management: 10.0.2.5
 private_ip_nfs: 10.0.1.5
 private_ip_backup: 10.0.1.6
+
+# Network configuratie
+vnetname: MyVnet
+vnetprefix: 10.0.0.0/16
 
 # Subnet en NSG configuratie per subnet
 network:
@@ -21,6 +44,7 @@ network:
     priority: 100
     direction: Inbound
     status: present
+
   - nsgname: Management-NSG
     rulename: SSH
     protocol: Tcp
@@ -29,15 +53,18 @@ network:
     priority: 100
     direction: Inbound
     status: present
+
   subnets:
   - subnetname: Front-End
     prefix: 10.0.0.0/24
     securitygroup:
     status: present
+
   - subnetname: Back-End
     prefix: 10.0.1.0/24
     securitygroup: Back-End-NSG
     status: present
+    
   - subnetname: Management
     prefix: 10.0.2.0/24
     securitygroup: Management-NSG
