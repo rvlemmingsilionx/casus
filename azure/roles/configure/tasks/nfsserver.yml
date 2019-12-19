@@ -20,10 +20,10 @@
          path: /etc/exports
          line: '/srv/nfs-share/{{ nfsip }}/24(rw,no_root_squash,no_subtree_check)'
 
-      - name: Configuratie afronden & herstarten
-        command: exportfs -r
-        service:
-          name: nfs-kernel-server
-          state: reload
+     - name: Configuratie afronden & herstarten
+       command: exportfs -r
+         service:
+           name: nfs-kernel-server
+           state: reload
      
    
