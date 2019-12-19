@@ -2,6 +2,10 @@
 - hosts: localhost
   connection: local
   gather_facts: true
+  vars_prompt:
+    - name: choise
+      prompt: "Wil je Azure inrichten? (y/n)"
+      private: no
 
   pre_tasks:
     - name: Include Vars
@@ -11,7 +15,7 @@
         - 'vars/vars.yml'
 
   roles:
-    - deploy
+    - { role: deploy, when: choise  == "y" }
 
   tasks:
     - name: Set azure_state Deployed
@@ -19,19 +23,20 @@
         path: group_vars/all
         regexp: '^azure_state:'
         line: 'azure_state: deployed'
+      when: choise == "y"
 
     - name: Add public ip of the managementnode to the group
       add_host:
         name: "{{ ip_address.state.ip_address }}"
         groups: confmanagementnode
-    - name: debug
-      debug:
-        msg: "{{ azure_state }}"
-
-
+      when: choise == "y"
 
 - hosts: confmanagementnode
   gather_facts: true
+  vars_prompt:
+    - name: choise
+      prompt: "Wil je de management node inrichten? (y/n)"
+      private: no
 
   pre_tasks:
     - name: Include Vars
@@ -41,7 +46,7 @@
         - 'vars/vars.yml'
 
   roles:
-    - { role: mmnode, when: azure_state == "deployed" }
+    - { role: mmnode, when: azure_state == "deployed" and choise == "y"}
 
   tasks:
     - name: Set azure_state Readytodeploy
@@ -50,8 +55,13 @@
         regexp: '^azure_state:'
         line: 'azure_state: RedyToDeploy'
 
+
 - hosts: allservers
   gather_facts: true
+  vars_prompt:
+    - name: choise
+      prompt: "Wil je de complete infrastructuur inrichten?? (y/n)"
+      private: no
 
   pre_tasks:
     - name: Include Vars
@@ -61,4 +71,22 @@
         - 'vars/vars.yml'
 
   roles:
-    - configure
+    - { role: configure, when: choise == "y"}
+
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  vars_prompt:
+    - name: choise
+      prompt: "Wil je de undeployment starten? (y/n)"
+      private: no
+
+  pre_tasks:
+    - name: Include Vars
+      include_vars: "{{ item }}"
+      with_items:
+        - 'vars/secret.yml'
+        - 'vars/vars.yml'
+
+  roles:
+    - { role: undeploy, when: choise == "y" }

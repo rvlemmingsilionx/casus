@@ -1,7 +1,294 @@
----
-  - include: network.yml
-  - include: loadbalancer.yml
-  - include: webserver.yml
-  - include: beheerserver.yml
-  - include: nfsserver.yml
-  - include: powerstate.yml
+- name: Remove Scale Set
+  azure_rm_virtualmachinescaleset:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ vmscalesetname }}"
+    state: absent
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    ssh_password_enabled: false
+    capacity: 2
+    virtual_network_name: "{{ vnetname }}"
+    subnet_name: Front-End
+    upgrade_policy: Manual
+    tier: Standard
+    managed_disk_type: Standard_LRS
+    os_disk_caching: ReadWrite
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    load_balancer: "{{ loadbalancername }}"
+    data_disks:
+      - lun: 0
+        disk_size_gb: 20
+        managed_disk_type: Standard_LRS
+        caching: ReadOnly
+  tags:
+  -  scaleset
+
+- name: Remove Network Security Group
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ vmscalesetname }}"
+    state: absent
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+  tags:
+  - scaleset
+  - nsgscaleset
+
+
+
+- name: Remove Backup-VM
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: "{{ backupname }}"
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ backupname }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: absent
+
+  tags:
+  - backupvm
+  - backup
+
+- name: Remove virtual nic for Backupserver
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ backupname }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: Back-End
+    security_group: "{{ backupname }}"
+    private_ip_address: "{{ private_ip_backup }}"
+    private_ip_allocation_method: Static
+    state: absent
+  tags:
+    - backupnic
+    - backup
+
+
+- name: Remove Network Security Group Backupserver
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ backupname }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    state: absent
+  tags:
+    - backupnsg
+    - backup
+
+- name: Remove NFSServer
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: "{{ nfsname }}"
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ nfsname }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: absent
+
+  tags:
+  - nfsvm
+  - nfs
+
+- name: Remove virtual nic for nfsserver
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ nfsname }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: Back-End
+    security_group: "{{ nfsname }}"
+    private_ip_address: "{{ private_ip_nfs }}"
+    private_ip_allocation_method: Static
+    state: absent
+  tags:
+    - nfsnic
+    - nfs
+
+- name: Remove Network Security Group for nfsserver
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ nfsname }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    state: absent
+  tags:
+    - nfsnsg
+    - nfs
+
+
+- name: remove VM managementnode
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: "{{ managementnaam }}"
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ managementnaam }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: absent
+  tags:
+  - managementvm
+  - management
+
+- name: remove virtual network interface card
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ managementnaam }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: Management
+    security_group: Management-NSG
+    public_ip_name: "{{ managementnaam }}"
+    private_ip_allocation_method: Static
+    private_ip_address: "{{ private_ip_management }}"
+    state: absent
+  tags:
+    - managementnic
+    - management
+
+- name: remove Network Security Group that allows SSH
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ managementnaam }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    state: absent
+  tags:
+    - managementnsg
+    - management
+- name: remove public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ resourcegroup }}"
+    allocation_method: Static
+    name: "{{ managementnaam }}"
+    state: absent
+  tags:
+  - management
+  - managementip
+
+- name: remove Loadbalancer
+  azure_rm_loadbalancer:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ loadbalancername }}"
+    sku: Basic
+    state: absent
+    public_ip: "{{ loadbalancername }}"
+    probe_protocol: Tcp
+    probe_port: 80
+    probe_interval: 10
+    probe_fail_count: 3
+    protocol: Tcp
+    load_distribution: Default
+    frontend_port: 80
+    backend_port: 80
+    idle_timeout: 4
+    natpool_frontend_port_start: 50000
+    natpool_frontend_port_end: 50040
+    natpool_backend_port: 22
+    natpool_protocol: Tcp
+  tags:
+  - loadbalancer
+
+- name: remove loadbalancer IP
+  azure_rm_publicipaddress:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ loadbalancername }}"
+    allocation_method: static
+    state: absent
+  tags:
+  - loadbalancerip
+  - loadbalancer
+
+- name: Remove NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ item.nsgname }}"
+    rules:
+      - name: "{{ item.rulename }}"
+        protocol: "{{ item.protocol }}"
+        destination_port_range: "{{ item.destportrange }}"
+        access: "{{ item.access }}"
+        priority: "{{ item.priority }}"
+        direction: "{{ item.direction}}"
+    state: absent
+  with_items: "{{ network.nsgs}}"
+  tags:
+  - subnetnsg
+  - network
+
+
+- name: Remove Subnets
+  azure_rm_subnet:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ item.subnetname }}"
+    address_prefix: "{{ item.prefix }}"
+    virtual_network: "{{ vnetname }}"
+    state: absent
+    security_group: "{{ item.securitygroup }}"
+  with_items: "{{ network.subnets }}"
+  tags:
+  - subnet
+  - network
+
+- name: remove Vnet
+  azure_rm_virtualnetwork:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ vnetname }}"
+    address_prefixes_cidr:
+      - "{{ vnetprefix }}"
+    state: absent
+  tags:
+  - vnet
+  - network
