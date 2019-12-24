@@ -1,4 +1,4 @@
-- name: Create Network Security Group that allows SSH
+- name: Aanmaken webserver Scaleset NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
     name: "{{ vmscalesetname }}"
@@ -14,7 +14,7 @@
   - scaleset
   - nsgscaleset
 
-- name: Create Scale Set
+- name: Aanmaken Webserver Scale Set
   azure_rm_virtualmachinescaleset:
     resource_group: "{{ resourcegroup }}"
     name: "{{ vmscalesetname }}"
@@ -32,6 +32,7 @@
     tier: Standard
     managed_disk_type: Standard_LRS
     os_disk_caching: ReadWrite
+    short_hostname: bier
     image:
       offer: UbuntuServer
       publisher: Canonical

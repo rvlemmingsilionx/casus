@@ -1,4 +1,4 @@
-- name: Create Network Security Group that allows SSH
+- name: Aanmaken NFSServer NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
     name: "{{ nfsname }}"
@@ -14,7 +14,7 @@
     - nfsnsg
     - nfs
 
-- name: Create virtual network interface card
+- name: Aanmaken NFSserver NIC
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
     name: "{{ nfsname }}"
@@ -28,7 +28,7 @@
     - nfsnic
     - nfs
 
-- name: Aanmaken VM
+- name: Aanmaken NFSServer VM
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03
     name: "{{ nfsname }}"

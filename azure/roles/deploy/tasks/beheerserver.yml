@@ -1,4 +1,4 @@
-- name: Create public IP address
+- name: Aanmaken Publiek IP Managementnode
   azure_rm_publicipaddress:
     resource_group: "{{ resourcegroup }}"
     allocation_method: Static
@@ -9,7 +9,7 @@
   - management
   - managementip
 
-- name: Create Network Security Group that allows SSH
+- name: Aanmaken Managementnode NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
     name: "{{ managementnaam }}"
@@ -25,7 +25,7 @@
     - managementnsg
     - management
 
-- name: Create virtual network interface card
+- name: Aanmaken Managementnode NIC
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
     name: "{{ managementnaam }}"

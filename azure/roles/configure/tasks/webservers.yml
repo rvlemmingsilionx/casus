@@ -8,6 +8,6 @@
     - ansible_hostname == "web01" or ansible_hostname == "web02"
 
 - name: Mount NFS folder at boot
-  raw: '"{{ nfsip }}":/home/"{{ adminname }}"/webfiles   /var/www/html   nfs    auto  0  0'
+  raw: X
   when:
     - ansible_hostname == "web01" or ansible_hostname == "web02"
