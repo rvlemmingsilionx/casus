@@ -19,9 +19,9 @@
 
 - name: Server configureren
   lineinfile:
-  become: yes
    path: /etc/exports
    line: '/var/webshare 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
+  become: yes
   when:
     - ansible_hostname == nfsname
 
@@ -33,8 +33,9 @@
 
 - name: Herstarten NFSkernel service
   service:
-  become: yes
     name: nfs-kernel-server
     state: reload
+  become: yes
+
   when:
     - ansible_hostname == nfsname
