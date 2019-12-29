@@ -3,7 +3,7 @@
     name: nfs-kernel-server
     update_cache: yes
   when:
-    - ansible_hostname == "{{ nfsname }}"
+    - ansible_hostname == nfsname
 
 - name: Aanmaken NFS directory
   file:
@@ -13,23 +13,23 @@
     owner: "{{ adminname }}"
     group: "{{ adminname }}"
   when:
-    - ansible_hostname == "{{ nfsname }}"
+    - ansible_hostname == nfsname
 
 - name: Server configureren
   lineinfile:
    path: /etc/exports
    line: '/var/webshare 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
   when:
-    - ansible_hostname == "{{ nfsname }}"
+    - ansible_hostname == nfsname
 
 - name: Configuratie afronden & herstarten
   command: exportfs -r
   when:
-    - ansible_hostname == "{{ nfsname }}"
+    - ansible_hostname == nfsname
 
 - name: Herstarten NFSkernel service
   service:
     name: nfs-kernel-server
     state: reload
   when:
-    - ansible_hostname == "{{ nfsname }}"
+    - ansible_hostname == nfsname
