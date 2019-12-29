@@ -2,6 +2,7 @@
   apt:
     name: nfs-kernel-server
     update_cache: yes
+  become: yes
   when:
     - ansible_hostname == nfsname
 
@@ -12,11 +13,13 @@
     mode: '0755'
     owner: "{{ adminname }}"
     group: "{{ adminname }}"
+  become: yes
   when:
     - ansible_hostname == nfsname
 
 - name: Server configureren
   lineinfile:
+  become: yes
    path: /etc/exports
    line: '/var/webshare 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
   when:
@@ -24,11 +27,13 @@
 
 - name: Configuratie afronden & herstarten
   command: exportfs -r
+  become: yes
   when:
     - ansible_hostname == nfsname
 
 - name: Herstarten NFSkernel service
   service:
+  become: yes
     name: nfs-kernel-server
     state: reload
   when:
