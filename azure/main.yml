@@ -53,13 +53,18 @@
 
   roles:
     - { role: mmnode, when: azure_state == "deployed" and choise == "y"}
+
 ### Configuratie Role ###
-- hosts: allservers
-  gather_facts: false
+- hosts: servers
+  gather_facts: true
+  vars:
+    ansible_user: ansibleuser
+    ansible_connection: ssh
   vars_prompt:
     - name: choise
       prompt: "Wil je de complete infrastructuur remote laten inrichten? (y/n)"
       private: no
+
   ignore_errors: yes
   pre_tasks:
     - name: Include Vars

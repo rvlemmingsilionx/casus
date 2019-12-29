@@ -1,5 +1,5 @@
 [allservers]
-192.168.179.134
+192.168.179.134 ansible_user=ansibleuser ansible_become=true
 192.168.179.135
 192.168.179.136
 192.168.179.137
@@ -19,10 +19,7 @@ localhost
 [managementnode]
 192.168.179.133
 
-[confmanagementnode]
-addipaddr
-
-[secret]
+[servers]
 192.168.179.134
 192.168.179.135
 192.168.179.136

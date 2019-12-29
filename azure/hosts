@@ -1,4 +1,4 @@
-[allservers]
+[servers]
 10.0.0.4
 10.0.0.5
 10.0.1.5
@@ -8,7 +8,7 @@ localhost
 
 [webservers]
 10.0.0.4
-10.0.0.5
+10.0.0.7
 
 [backupserver]
 10.0.1.6

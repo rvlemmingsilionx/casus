@@ -3,11 +3,10 @@
     pkg:
     - apache2
     - nfs-common
+#  when:
+#    - ansible_hostname == web01 or ansible_hostname == web02
   become: yes
-  when:
-    - ansible_hostname == "web01" or ansible_hostname == "web02"
-
-- name: Mount NFS folder at boot
-  raw: X
-  when:
-    - ansible_hostname == "web01" or ansible_hostname == "web02"
+#- name: Mount NFS folder at boot
+#  raw: X
+#  when:
+#    - ansible_hostname == "web01" or ansible_hostname == "web02"

@@ -24,8 +24,12 @@
 
 - name: Configuratie afronden & herstarten
   command: exportfs -r
-    service:
-      name: nfs-kernel-server
-      state: reload
+  when:
+    - ansible_hostname == "{{ nfsname }}"
+
+- name: Herstarten NFSkernel service
+  service:
+    name: nfs-kernel-server
+    state: reload
   when:
     - ansible_hostname == "{{ nfsname }}"
