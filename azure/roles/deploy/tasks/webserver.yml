@@ -32,7 +32,7 @@
     tier: Standard
     managed_disk_type: Standard_LRS
     os_disk_caching: ReadWrite
-    short_hostname: bier
+    short_hostname: scaleset
     image:
       offer: UbuntuServer
       publisher: Canonical

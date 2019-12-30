@@ -2,10 +2,10 @@
 ### Azure Deployment Role ###
 - hosts: localhost
   connection: local
-  gather_facts: true
+  gather_facts: "{{ choice }}"
   vars_prompt:
-    - name: choise
-      prompt: "Wil je Azure inrichten? (y/n)"
+    - name: choice
+      prompt: "Wil je Azure inrichten? (yes/no)"
       private: no
 
   pre_tasks:
@@ -14,9 +14,9 @@
       with_items:
         - 'vars/secret.yml'
         - 'vars/vars.yml'
-
+      when: choice == "yes"
   roles:
-    - { role: deploy, when: choise  == "y" }
+    - { role: deploy, when: choice  == "yes" }
 
   tasks:
     - name: Set azure_state Deployed
@@ -24,24 +24,24 @@
         path: group_vars/all
         regexp: '^azure_state:'
         line: 'azure_state: deployed'
-      when: choise == "y"
+      when: choice == "yes"
 
     - name: Add public ip of the managementnode to the group
       add_host:
         name: "{{ ip_address.state.ip_address }}"
         groups: confmanagementnode
-      when: choise == "y"
+      when: choice == "yes"
 
 ### Managementnode Configuration role
 - hosts: confmanagementnode
-  gather_facts: true
+  gather_facts: "{{ choice }}"
   vars:
     ansible_user: ansibleuser
     ansible_connection: ssh
 
   vars_prompt:
-    - name: choise
-      prompt: "Wil je de management node inrichten? (y/n)"
+    - name: choice
+      prompt: "Wil je de management node inrichten? (yes/no)"
       private: no
 
   pre_tasks:
@@ -50,19 +50,20 @@
       with_items:
         - 'vars/secret.yml'
         - 'vars/vars.yml'
+      when: choice == "yes"
 
   roles:
-    - { role: mmnode, when: azure_state == "deployed" and choise == "y"}
+    - { role: mmnode, when: azure_state == "deployed" and choice == "yes"}
 
 ### Configuratie Role ###
 - hosts: servers
-  gather_facts: true
+  gather_facts: "{{ choice }}"
   vars:
     ansible_user: ansibleuser
     ansible_connection: ssh
   vars_prompt:
-    - name: choise
-      prompt: "Wil je de complete infrastructuur remote laten inrichten? (y/n)"
+    - name: choice
+      prompt: "Wil je de complete infrastructuur remote laten inrichten? (yes/no)"
       private: no
 
   ignore_errors: yes
@@ -72,18 +73,19 @@
       with_items:
         - 'vars/secret.yml'
         - 'vars/vars.yml'
+      when: choice == "yes"
 
   roles:
-    - { role: configure, when: choise == "y"}
+    - { role: configure, when: choice == "yes"}
 
 ### Undeployment Role ###
 - hosts: localhost
   connection: local
-  gather_facts: true
-
+  gather_facts: "{{ choice }}"
+  ignore_errors: yes
   vars_prompt:
-    - name: choise
-      prompt: "Wil je de undeployment starten? (y/n)"
+    - name: choice
+      prompt: "Wil je de undeployment starten? (yes/no)"
       private: no
 
   pre_tasks:
@@ -92,6 +94,7 @@
       with_items:
         - 'vars/secret.yml'
         - 'vars/vars.yml'
+      when: choice == "yes"
 
   roles:
-    - { role: undeploy, when: choise == "y" }
+    - { role: undeploy, when: choice == "yes" }
