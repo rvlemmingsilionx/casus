@@ -39,3 +39,10 @@
 
   when:
     - ansible_hostname == nfsname
+
+- name: Instellen cronjob voor backups
+  cron:
+    name: "Backup maken"
+    minute: "0"
+    hour: "20"
+    job: "tar -czf /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/webshare && scp /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/backups/ "
