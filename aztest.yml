@@ -11,13 +11,13 @@
         msg: "{{azureVersion.stdout}}"
 
     - name: Get ips
-      shell: az vmss nic list --resource-group A2S2_GROEP_03 --vmss-name Webscaleset --query "[].ipConfigurations[].privateIpAddress"
+      shell: az vmss nic list --resource-group A2S2_GROEP_03 --vmss-name Webscaleset --query "[].ipConfigurations[].privateIpAddress" -o tsv
       register: addresses
 
     - debug:
         msg: "{{ (addresses.stdout | from_yaml) }}"
 
     - debug:
-        msg: "{{ addresses.stdout[1] }}"
+        msg: "{{ addresses.stdout }}"
   
-    - local_action: copy content="{{ ( addresses.stdout | from_json ) }}" dest="ip.txt"
+    - local_action: copy content="{{  addresses.stdout }}" dest="ip.txt"
