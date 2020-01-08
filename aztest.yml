@@ -1,7 +1,7 @@
 - name: Install Azure Cli
   hosts: localhost
-  gather_facts: true
-  become: true
+  gather_facts: false
+#  become: true
   tasks:
     - name: Verify installed version
       shell: az --version
@@ -9,8 +9,15 @@
 
     - debug:
         msg: "{{azureVersion.stdout}}"
+
     - name: Get ips
-      shell: az vmss nic list --resource-group A2S2_GROEP_03 --vmss-name Webscaleset --query "[].ipConfigurations[].privateIpAddress"
+      shell: az vmss nic list --resource-group A2S2_GROEP_03 --vmss-name Webscaleset --query "[].ipConfigurations[].privateIpAddress" -o tsv
       register: addresses
+
     - debug:
-        msg: "{{ addresses }}"
+        msg: "{{ (addresses.stdout | from_yaml) }}"
+
+    - debug:
+        msg: "{{ addresses.stdout }}"
+  
+    - local_action: copy content="{{  addresses.stdout }}" dest="ip.txt"

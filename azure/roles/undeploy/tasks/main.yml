@@ -250,7 +250,7 @@
   tags:
   - loadbalancerip
   - loadbalancer
-  
+
 - name: Remove Subnets
   azure_rm_subnet:
     resource_group: "{{ resourcegroup }}"
