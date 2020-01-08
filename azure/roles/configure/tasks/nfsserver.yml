@@ -26,7 +26,7 @@
     - ansible_hostname == nfsname
 
 - name: Configuratie afronden & herstarten
-  command: exportfs -r
+  shell: exportfs -r
   become: yes
   when:
     - ansible_hostname == nfsname
@@ -45,4 +45,4 @@
     name: "Backup maken"
     minute: "0"
     hour: "20"
-    job: "tar -czf /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/webshare && scp /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/backups/ "
+    job: "tar -czf /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/webshare && scp /tmp/backup-$(date +%Y-%m-%d).tar.gz backup_user@{{ private_ip_backup }} /var/backups/"
