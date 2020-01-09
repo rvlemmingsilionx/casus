@@ -1,0 +1,32 @@
+- name: Install packages
+  apt:
+    pkg:
+    - apache2
+    - nfs-common
+#  when:
+#    - ansible_hostname == web01 or ansible_hostname == web02
+  become: yes
+
+- name: Create mount point for NFS
+  shell: mkdir /mnt/webshare
+
+- name: Configure fstab
+  lineinfile:
+    path: /etc/fstab
+    state: present
+    insertafter: EOL
+    line: "{{ private_ip_nfs }}/:/var/webshare /mnt/webshare nfs r,hard,intr,tcp 0 0"
+
+# Using raw for module supported actions is not best practice.
+# This task is left in for testing purposes.
+#- name: Mount NFS folder at boot
+#  shell: mount "{{ private_ip_nfs }}":/var/webshare /mnt/webshare
+#  when:
+#    - ansible_hostname == "web01" or ansible_hostname == "web02"
+
+- name: Mount NFS share
+  mount:
+    path: /mnt/webshare
+    src: "{{ private_ip_nfs }}"
+    fstype: nfs
+    state: present
