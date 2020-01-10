@@ -1,1 +1,9 @@
 ---
+- name: Installeren van een SQL service
+  apt:
+    pkg:
+    - mysql-server
+    update_cache: yes
+  become: yes
+  when:
+    - ansible_hostname == Sqlserver
