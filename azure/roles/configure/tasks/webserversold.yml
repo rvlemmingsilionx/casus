@@ -1,0 +1,16 @@
+---
+- name: Install packages
+  apt:
+    pkg:
+    - apache2
+    - nfs-common
+    update_cache: yes
+  become: yes
+  when:
+    - ansible_hostname == scaleset000000 or ansible_hostname == scaleset000001
+
+  - name: NFS Share mounten
+    lineinfile:
+      path: /etc/fstab
+      line: '{{ private_ip_nfs }}:/var/webshare /var/www/html nfs      defaults    0       0'
+    become: yes
