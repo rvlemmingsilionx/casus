@@ -102,6 +102,60 @@
     - backupnsg
     - backup
 
+- name: Remove SQL-VM
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: "{{ sqlname }}"
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ sqlname }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: absent
+
+  tags:
+  - sqlvm
+  - sql
+
+- name: Remove virtual nic for Sqlserver
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ sqlname }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: Back-End
+    security_group: "{{ sqlname }}"
+    private_ip_address: "{{ private_ip_sql }}"
+    private_ip_allocation_method: Static
+    state: absent
+  tags:
+    - sqlnic
+    - sql
+
+
+- name: Remove Network Security Group Sqlserver
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ sqlname }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+    state: absent
+  tags:
+    - sqlnsg
+    - sql
+
 - name: Remove NFSServer
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03

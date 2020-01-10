@@ -1,0 +1,59 @@
+- name: Aanmaken SQL Server NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ sqlname }}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: SQL
+        protocol: Tcp
+        destination_port_range: 1433
+        access: Allow
+        priority: 1002
+        direction: Inbound
+    state: "{{ status }}"
+  tags:
+    - sqlnsg
+    - sql
+
+- name: Aanmaken Sqlserver NIC
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ sqlname }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: Back-End
+    security_group: "{{ sqlname }}"
+    private_ip_address: "{{ private_ip_sql }}"
+    private_ip_allocation_method: Static
+    state: "{{ status }}"
+  tags:
+    - sqlnic
+    - sql
+
+- name: Aanmaken SQL-VM
+  azure_rm_virtualmachine:
+    resource_group: A2S2_GROEP_03
+    name: "{{ sqlname }}"
+    vm_size: Standard_B2s
+    admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ adminname }}/.ssh/authorized_keys
+        key_data: "{{ sshkey }}"
+    network_interfaces: "{{ sqlname }}"
+    managed_disk_type: Standard_LRS
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: 16.04-LTS
+      version: latest
+    state: "{{ status }}"
+    started: "{{ gestart }}"
+
+  tags:
+  - sqlvm
+  - sql
