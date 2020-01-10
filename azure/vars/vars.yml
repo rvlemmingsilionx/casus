@@ -17,6 +17,9 @@ gestart: yes
 # BackupServer Vars
 backupname: Backupserver01
 
+#sql server vars
+sqlname: Sqlserver
+
 # Powerstate Vars
 powerstate: running
 vms:
@@ -28,6 +31,7 @@ vms:
 private_ip_management: 10.0.2.5
 private_ip_nfs: 10.0.1.5
 private_ip_backup: 10.0.1.6
+private_ip_sql: 10.0.1.7
 
 # Network configuratie
 vnetname: MyVnet
