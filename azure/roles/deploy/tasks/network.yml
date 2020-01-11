@@ -21,7 +21,7 @@
         priority: "{{ item.priority }}"
         direction: "{{ item.direction}}"
     state: "{{ item.status }}"
-  with_items: "{{ network.nsgs}}"
+  with_items: "{{ network.nsgs }}"
   tags:
   - subnetnsg
   - network

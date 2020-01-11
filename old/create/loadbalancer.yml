@@ -5,7 +5,7 @@
     - name: create load balancer
       azure_rm_loadbalancer:
         resource_group: A2S2_GROEP_03
-        name: loadbalancer1
+        name: rensloadbalancer
         state: absent
         sku: Basic
         frontend_ip_configurations:
@@ -20,9 +20,9 @@
           - name: inboundnatpool0
             frontend_ip_configuration_name: frontendipconf0
             protocol: Tcp
-            frontend_port_range_start: 80
-            frontend_port_range_end: 81
-            backend_port: 8080
+            frontend_port_range_start: 90
+            frontend_port_range_end: 100
+            backend_port: 22
         load_balancing_rules:
           - name: lbrbalancingrule0
             frontend_ip_configuration: frontendipconf0

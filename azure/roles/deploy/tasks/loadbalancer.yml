@@ -14,19 +14,22 @@
     name: "{{ loadbalancername }}"
     sku: Basic
     state: "{{ status }}"
-    public_ip: "{{ loadbalancername }}"
-    probe_protocol: Tcp
-    probe_port: 80
-    probe_interval: 10
-    probe_fail_count: 3
-    protocol: Tcp
-    load_distribution: Default
-    frontend_port: 80
-    backend_port: 80
-    idle_timeout: 4
-    natpool_frontend_port_start: 50000
-    natpool_frontend_port_end: 50040
-    natpool_backend_port: 22
-    natpool_protocol: Tcp
+    frontend_ip_configurations:
+      - name: frontendipconf0
+        public_ip_address: "{{ loadbalancername }}"
+    backend_address_pools:
+      - name: backendaddrpool0
+    probes:
+      - name: prob0
+        port: 80
+        interval: 5
+        fail_count: 3
+    load_balancing_rules:
+      - name: lbrbalancingrule0
+        frontend_ip_configuration: frontendipconf0
+        backend_address_pool: backendaddrpool0
+        frontend_port: 80
+        backend_port: 80
+        probe: prob0
   tags:
   - loadbalancer

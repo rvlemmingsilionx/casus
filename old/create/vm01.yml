@@ -6,12 +6,12 @@
       azure_rm_virtualmachine:
         resource_group: A2S2_GROEP_03
         name: vm01
-        availability_set: gratisbiervoorhugo
+        state: absent
+        availability_set: availabilityset1
         vm_size: Standard_B2s
         admin_username: rens
         admin_password: Welkom123!
-        network_interfaces: vm01nic
-        managed_disk_type: Standard_LRS
+        network_interfaces: vm02nic
         image:
           offer: UbuntuServer
           publisher: Canonical
