@@ -1,4 +1,3 @@
 resourcegroup: A2S2_GROEP_03
 resourcegroep: A2S2_GROEP_03
 azure_state: deployed
-ANSIBLE_HOST_KEY_CHECKING: False

@@ -40,3 +40,10 @@
 - name: Change GIT folder ownership
   raw: chown -R "{{ adminname }}":"{{ adminname }}" /home/"{{ adminname }}"/casus
   when: stat_result.stat.exists == False
+
+- name: Change ansible configuration file
+  lineinfile:
+    path: /etc/ansible/ansible.cfg
+    regexp: '^#host_key_checking = False'
+    line: host_key_checking = False
+  become: yes
