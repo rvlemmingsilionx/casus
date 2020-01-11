@@ -1,12 +1,18 @@
+---
 - name: Install packages
   apt:
     pkg:
     - apache2
     - nfs-common
-  when:
-#    - ansible_hostname == web01 or ansible_hostname == web02
+    update_cache: yes
   become: yes
-#- name: Mount NFS folder at boot
-#  raw: X
-#  when:
-#    - ansible_hostname == "web01" or ansible_hostname == "web02"
+  when:
+    - "'webservers' in group_names"
+
+  - name: NFS Share mounten
+    lineinfile:
+      path: /etc/fstab
+      line: '{{ private_ip_nfs }}:/var/webshare /var/www/html nfs      defaults    0       0'
+    become: yes
+  when:
+    - "'webservers' in group_names"

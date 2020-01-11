@@ -6,4 +6,4 @@
     update_cache: yes
   become: yes
   when:
-    - ansible_hostname == Sqlserver
+    - "'sqlservers' in group_names"

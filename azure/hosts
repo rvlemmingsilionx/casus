@@ -12,8 +12,11 @@
 [backupserver]
 10.0.1.6
 
-[nfsserver]
+[nfsservers]
 10.0.1.5
+
+[sqlservers]
+10.0.1.7
 
 [managementnode]
 10.0.2.5

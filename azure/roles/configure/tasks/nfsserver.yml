@@ -4,7 +4,7 @@
     update_cache: yes
   become: yes
   when:
-    - ansible_hostname == nfsname
+    - "'nfsservers' in group_names"
 
 - name: Aanmaken NFS directory
   file:
@@ -15,7 +15,7 @@
     group: "{{ adminname }}"
   become: yes
   when:
-    - ansible_hostname == nfsname
+    - "'nfsservers' in group_names"
 
 - name: Server configureren
   lineinfile:
@@ -23,22 +23,21 @@
    line: '/var/webshare 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
   become: yes
   when:
-    - ansible_hostname == nfsname
+    - "'nfsservers' in group_names"
 
 - name: Configuratie afronden & herstarten
   shell: exportfs -r
   become: yes
   when:
-    - ansible_hostname == nfsname
+    - "'nfsservers' in group_names"
 
 - name: Herstarten NFSkernel service
   service:
     name: nfs-kernel-server
     state: reloaded
   become: yes
-
   when:
-    - ansible_hostname == nfsname
+    - "'nfsservers' in group_names"
 
 - name: Instellen cronjob voor backups
   cron:
@@ -46,3 +45,5 @@
     minute: "0"
     hour: "20"
     job: "tar -czf /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/webshare && scp /tmp/backup-$(date +%Y-%m-%d).tar.gz backup_user@{{ private_ip_backup }} /var/backups/"
+  when:
+    - "'nfsservers' in group_names"
