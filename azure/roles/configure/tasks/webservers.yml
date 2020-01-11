@@ -9,10 +9,10 @@
   when:
     - "'webservers' in group_names"
 
-  - name: NFS Share mounten
-    lineinfile:
-      path: /etc/fstab
-      line: '{{ private_ip_nfs }}:/var/webshare /var/www/html nfs      defaults    0       0'
-    become: yes
+- name: NFS Share mounten
+  lineinfile:
+    path: /etc/fstab
+    line: '{{ private_ip_nfs }}:/var/webshare /var/www/html nfs      defaults    0       0'
+  become: yes
   when:
     - "'webservers' in group_names"

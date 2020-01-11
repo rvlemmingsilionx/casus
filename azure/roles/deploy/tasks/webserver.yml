@@ -28,13 +28,14 @@
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroep }}"
     name: "{{ item.vmname }}"
-    virtual_network: MyVnet
+    virtual_network: "{{ vnetname }}"
     subnet: Front-End
     state: present
     ip_configurations:
           - name: ipconfig1
             primary: True
-            private_ip_address: "{{ item.ip }}"
+            private_ip_address: "{{ item.ipaddress }}"
+            private_ip_allocation_method: Static
             load_balancer_backend_address_pools:
               - name: backendaddrpool0
                 load_balancer: "{{ loadbalancername }}"

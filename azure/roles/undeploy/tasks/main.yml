@@ -1,39 +1,43 @@
-- name: Remove Scale Set
-  azure_rm_virtualmachinescaleset:
-    resource_group: "{{ resourcegroup }}"
-    name: "{{ vmscalesetname }}"
+- name: Remove Webserver virtual machines
+  azure_rm_virtualmachine:
+    resource_group: "{{ resourcegroep }}"
+    name: "{{ item.vmname }}"
     state: absent
-    vm_size: Standard_B2s
+    availability_set: "{{ availabilityset_name }}"
+    vm_size: "{{ item.vmsize }}"
     admin_username: "{{ adminname }}"
+    ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    ssh_password_enabled: false
-    capacity: 2
-    virtual_network_name: "{{ vnetname }}"
-    subnet_name: Front-End
-    upgrade_policy: Manual
-    tier: Standard
-    managed_disk_type: Standard_LRS
-    os_disk_caching: ReadWrite
+    network_interfaces: "{{ item.vmname }}"
     image:
       offer: UbuntuServer
       publisher: Canonical
       sku: 16.04-LTS
       version: latest
-    load_balancer: "{{ loadbalancername }}"
-    data_disks:
-      - lun: 0
-        disk_size_gb: 20
-        managed_disk_type: Standard_LRS
-        caching: ReadOnly
-  tags:
-  -  scaleset
+  with_items: "{{ virtualmachine.vms }}"
 
-- name: Remove Network Security Group
+- name: Create Virtual Network Interface Card
+  azure_rm_networkinterface:
+    resource_group: "{{ resourcegroep }}"
+    name: "{{ item.vmname }}"
+    virtual_network: "{{ vnetname }}"
+    subnet: Front-End
+    state: absent
+    ip_configurations:
+          - name: ipconfig1
+            primary: True
+            private_ip_address: "{{ item.ip }}"
+            load_balancer_backend_address_pools:
+              - name: backendaddrpool0
+                load_balancer: "{{ loadbalancername }}"
+  with_items: "{{ virtualmachine.vms }}"
+
+- name: NSG maken voor virtual machines
   azure_rm_securitygroup:
-    resource_group: "{{ resourcegroup }}"
-    name: "{{ vmscalesetname }}"
+    resource_group: A2S2_GROEP_03
+    name: "{{ item.vmname }}"
     state: absent
     rules:
       - name: SSH
@@ -42,11 +46,20 @@
         access: Allow
         priority: 1001
         direction: Inbound
-  tags:
-  - scaleset
-  - nsgscaleset
+      - name: HTTP
+        protocol: Tcp
+        destination_port_range: 80
+        access: Allow
+        priority: 1002
+        direction: Inbound
+  with_items: "{{ virtualmachine.vms }}"
 
 
+- name: Remove Availability-set
+  azure_rm_availabilityset:
+    name: "{{ availabilityset_name }}"
+    resource_group: "{{ resourcegroep }}"
+    state: absent
 
 - name: Remove Backup-VM
   azure_rm_virtualmachine:
