@@ -12,7 +12,8 @@
 - name: NFS Share mounten
   lineinfile:
     path: /etc/fstab
-    line: '{{ private_ip_nfs }}:/var/webshare /var/www/html nfs      defaults    0       0'
+#    line: '{{ private_ip_nfs }}:/var/webshare /var/www/html nfs      defaults    0       0'
+    line: '{{ private_ip_nfs }}:/var/webshare    /var/www/html   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0'
   become: yes
   when:
     - "'webservers' in group_names"
