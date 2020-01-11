@@ -17,6 +17,9 @@
   become: yes
   when:
     - "'webservers' in group_names"
-    
+
 - name: Reboot servers to mount the share
   reboot:
+  become: yes
+  when:
+    - "'webservers' in group_names"
