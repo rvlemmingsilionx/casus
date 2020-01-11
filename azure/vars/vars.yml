@@ -73,6 +73,8 @@ network:
 virtualmachine:
   vms:
   - vmname: Webserver01
+    ip: 10.0.0.5
     vmsize: Standard_B2s
   - vmname: Webserver02
+    ip: 10.0.0.6
     vmsize: Standard_B2s
