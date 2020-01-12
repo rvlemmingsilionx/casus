@@ -28,8 +28,14 @@
 - name: Extract wordpress
   unarchive:
     src: /tmp/wordpress.tar.gz
-    dest: /var/ copy=no
+    dest: /tmp
     remote_src: yes
+  become: yes
+  when:
+    - "'nfsservers' in group_names"
+
+- name: Copy wordpress content to NFS Share
+  shell: cp -R /tmp/wordpress/* /var/webshare
   become: yes
   when:
     - "'nfsservers' in group_names"
@@ -37,7 +43,7 @@
 - name: Server configureren
   lineinfile:
    path: /etc/exports
-   line: '/var/wordpress 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
+   line: '/var/webshare 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
   become: yes
   when:
     - "'nfsservers' in group_names"
