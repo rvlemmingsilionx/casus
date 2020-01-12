@@ -24,12 +24,18 @@
     - "'sqlservers' in group_names"
 
 - name: Update MySQL root password for all root accounts
-   mysql_user: name=root host={{ item }} password={{ mysql_root_password }} state=present
-   with_items:
-     - "{{ ansible_hostname }}"
-     - 127.0.0.1
-     - ::1
-     - localhost
+  mysql_user:
+    name=root
+    host={{ item }}
+    password={{ mysql_root_password }}
+    state=present
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+  when:
+    - "'sqlservers' in group_names"
 
 - name: Copy the root credentials as .my.cnf file
   template: src=root.cnf.j2 dest=~/.my.cnf mode=0600
