@@ -7,3 +7,17 @@
   become: yes
   when:
     - "'sqlservers' in group_names"
+
+- name: Modify the mysql config
+  shell: sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf
+  become: yes
+  when:
+    - "'sqlservers' in group_names"
+
+- name: Herstarten mysqld service
+  service:
+    name: mysql
+    state: restarted
+  become: yes
+  when:
+    - "'sqlservers' in group_names"
