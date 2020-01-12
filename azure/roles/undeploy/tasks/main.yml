@@ -18,7 +18,7 @@
       version: latest
   with_items: "{{ virtualmachine.vms }}"
 
-- name: Create Virtual Network Interface Card
+- name: Remove Virtual Network Interface Card
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroep }}"
     name: "{{ item.vmname }}"
@@ -28,13 +28,13 @@
     ip_configurations:
           - name: ipconfig1
             primary: True
-            private_ip_address: "{{ item.ip }}"
+            private_ip_address: "{{ item.ipaddress }}"
             load_balancer_backend_address_pools:
               - name: backendaddrpool0
                 load_balancer: "{{ loadbalancername }}"
   with_items: "{{ virtualmachine.vms }}"
 
-- name: NSG maken voor virtual machines
+- name: Remove Webserver NSG
   azure_rm_securitygroup:
     resource_group: A2S2_GROEP_03
     name: "{{ item.vmname }}"

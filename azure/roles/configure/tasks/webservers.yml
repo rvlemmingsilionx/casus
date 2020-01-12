@@ -4,6 +4,13 @@
     pkg:
     - apache2
     - nfs-common
+    - php
+    - libapache2-mod-php7.2
+    - php7.2-mysql
+    - php7.2
+    - python-mysqldb
+    - php7.2-gd
+    - php7.2-ssh2
     update_cache: yes
   become: yes
   when:
@@ -12,7 +19,7 @@
 - name: NFS Share mounten
   lineinfile:
     path: /etc/fstab
-    line: '{{ private_ip_nfs }}:/var/webshare    /var/www/html   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0'
+    line: '{{ private_ip_nfs }}:/var/wordpress    /var/www/html   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0'
   become: yes
   when:
     - "'webservers' in group_names"
