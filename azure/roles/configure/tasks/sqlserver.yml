@@ -24,11 +24,11 @@
 
 - name: Update MySQL root password
   mysql_user:
-    login_user="root"
-    login_host="localhost"
-    login_password=""
-    name="root"
-    password="Welkom123!"
+    login_user: "root"
+    login_host: "localhost"
+    login_password: ""
+    name: root"
+    password: "Welkom123!"
     state: present
   become: yes
   when:
@@ -36,7 +36,7 @@
 
   - name: Add a WP database
     mysql_db:
-      name="wordpress"
+      name: "wordpress"
       state: present
     become: yes
     when:
@@ -44,9 +44,9 @@
 
   - name: Add a WP user for database
     mysql_user:
-      name="WPuser"
-      password="Welkom123!"
-      priv="*.*:ALL,GRANT"
+      name: "WPuser"
+      password: "Welkom123!"
+      priv: "*.*:ALL,GRANT"
       state: present
     become: yes
     when:
