@@ -35,22 +35,22 @@
     - "'sqlservers' in group_names"
 
 - name: Add a WP database
-    mysql_db:
-      name: wordpress
-      state: present
-    become: yes
-    when:
-      - "'sqlservers' in group_names"
+  mysql_db:
+    name: wordpress
+    state: present
+  become: yes
+  when:
+    - "'sqlservers' in group_names"
 
 - name: Add a WP user for database
-    mysql_user:
-      name: wpuser
-      password: Welkom123!
-      priv: "*.*:ALL,GRANT"
-      state: present
-    become: yes
-    when:
-      - "'sqlservers' in group_names"
+  mysql_user:
+    name: wpuser
+    password: Welkom123!
+    priv: "*.*:ALL,GRANT"
+    state: present
+  become: yes
+  when:
+    - "'sqlservers' in group_names"
 
 - name: Copy the root credentials as .my.cnf file
   template: src=templates/root.cnf.j2 dest=~/.my.cnf mode=0600
