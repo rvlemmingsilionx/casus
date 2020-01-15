@@ -44,7 +44,7 @@
 
   - name: Add a WP user for database
     mysql_user:
-      name: WPuser
+      name: wpuser
       password: Welkom123!
       priv: "*.*:ALL,GRANT"
       state: present
