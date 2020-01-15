@@ -5,11 +5,11 @@
   gather_facts: "{{ choice }}"
   vars_prompt:
     - name: choice
-      prompt: "Wil je Azure inrichten? (yes/no)"
+      prompt: "Do you want to deploy the cloud solution for 'De Wolk'? (yes/no)"
       private: no
 
   pre_tasks:
-    - name: Include Vars
+    - name: Include variables
       include_vars: "{{ item }}"
       with_items:
         - 'vars/secret.yml'
@@ -19,14 +19,14 @@
     - { role: deploy, when: choice  == "yes" }
 
   tasks:
-    - name: Set azure_state Deployed
+    - name: Set azure_state deployed
       lineinfile:
         path: group_vars/all
         regexp: '^azure_state:'
         line: 'azure_state: deployed'
       when: choice == "yes"
 
-    - name: Add public ip of the managementnode to the group
+    - name: Add public IP of the management node to the group
       add_host:
         name: "{{ ip_address.state.ip_address }}"
         groups: confmanagementnode
@@ -42,11 +42,11 @@
 
   vars_prompt:
     - name: choice
-      prompt: "Wil je de management node inrichten? (yes/no)"
+      prompt: "Do you want to configure the management node? (yes/no)"
       private: no
 
   pre_tasks:
-    - name: Include Vars
+    - name: Include vars
       include_vars: "{{ item }}"
       with_items:
         - 'vars/secret.yml'
@@ -64,12 +64,12 @@
     ansible_connection: ssh
   vars_prompt:
     - name: choice
-      prompt: "Wil je de complete infrastructuur remote laten inrichten? (yes/no)"
+      prompt: "Do you want to remotely configure the cloud solution for 'De Wolk'? (yes/no)"
       private: no
 
   ignore_errors: yes
   pre_tasks:
-    - name: Include Vars
+    - name: Include vars
       include_vars: "{{ item }}"
       with_items:
         - 'vars/secret.yml'
@@ -87,11 +87,11 @@
   ignore_errors: yes
   vars_prompt:
     - name: choice
-      prompt: "Wil je de undeployment starten? (yes/no)"
+      prompt: "Do you want to start the undeployment of the cloud solution for 'De Wolk'? (yes/no)"
       private: no
 
   pre_tasks:
-    - name: Include Vars
+    - name: Include vars
       include_vars: "{{ item }}"
       with_items:
         - 'vars/secret.yml'
