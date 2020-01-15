@@ -1,4 +1,4 @@
-- name: Installeren NFS server
+- name: Install NFS service
   apt:
     name: nfs-kernel-server
     update_cache: yes
@@ -6,7 +6,7 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Aanmaken NFS directory
+- name: Create NFS directory
   file:
     path: /var/webshare
     state: directory
@@ -17,7 +17,7 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Downloaden wordpress
+- name: Download WordPress
   get_url:
     url: https://wordpress.org/latest.tar.gz
     dest: /tmp/wordpress.tar.gz
@@ -25,7 +25,7 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Extract wordpress
+- name: Extract WordPress
   unarchive:
     src: /tmp/wordpress.tar.gz
     dest: /tmp
@@ -34,13 +34,13 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Copy wordpress content to NFS Share
+- name: Copy WordPress content to NFS Share
   shell: cp -R /tmp/wordpress/* /var/webshare
   become: yes
   when:
     - "'nfsservers' in group_names"
 
-- name: Server configureren
+- name: Designate webshare
   lineinfile:
    path: /etc/exports
    line: '/var/webshare 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
@@ -48,13 +48,13 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Configuratie afronden doorgeven
+- name: Update etab
   shell: exportfs -r
   become: yes
   when:
     - "'nfsservers' in group_names"
 
-- name: Herstarten NFSkernel service
+- name: Reload NFS service
   service:
     name: nfs-kernel-server
     state: reloaded
@@ -63,7 +63,7 @@
     - "'nfsservers' in group_names"
 
 
-- name: Instellen cronjob voor backups
+- name: Set cron job for backups
   cron:
     name: "Backup maken"
     minute: "0"
