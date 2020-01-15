@@ -40,3 +40,4 @@
 
 - name: Copy the root credentials as .my.cnf file
   template: src=templates/root.cnf.j2 dest=~/.my.cnf mode=0600
+  become: yes
