@@ -26,7 +26,6 @@
   mysql_user:
     login_user
 #    host={{ item }}
-    host="localhost"
     login_host="localhost"
     login_password=""
     update_password="Welkom123!"
