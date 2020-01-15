@@ -34,7 +34,7 @@
   when:
     - "'sqlservers' in group_names"
 
-  - name: Add a WP database
+- name: Add a WP database
     mysql_db:
       name: wordpress
       state: present
@@ -42,7 +42,7 @@
     when:
       - "'sqlservers' in group_names"
 
-  - name: Add a WP user for database
+- name: Add a WP user for database
     mysql_user:
       name: wpuser
       password: Welkom123!
@@ -52,6 +52,6 @@
     when:
       - "'sqlservers' in group_names"
 
-  - name: Copy the root credentials as .my.cnf file
-    template: src=templates/root.cnf.j2 dest=~/.my.cnf mode=0600
-    become: yes
+- name: Copy the root credentials as .my.cnf file
+  template: src=templates/root.cnf.j2 dest=~/.my.cnf mode=0600
+  become: yes
