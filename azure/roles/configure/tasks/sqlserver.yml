@@ -22,7 +22,7 @@
   when:
     - "'sqlservers' in group_names"
 
-- name: Update MySQL root password for all root accounts
+- name: Update MySQL root password
   mysql_user:
     login_user="root"
     login_host="localhost"
@@ -33,6 +33,19 @@
   become: yes
   when:
     - "'sqlservers' in group_names"
+
+  - name: Add a WP user + database
+    mysql_db:
+      name: wordpress
+      state: present
+    mysql_user:
+      name="WPuser"
+      password="Welkom123!"
+      priv="*.*:ALL,GRANT"
+      state: present
+    become: yes
+    when:
+      - "'sqlservers' in group_names"
 
 - name: Copy the root credentials as .my.cnf file
   template: src=templates/root.cnf.j2 dest=~/.my.cnf mode=0600
