@@ -29,7 +29,7 @@
     login_password=""
     name="root"
     password="Welkom123!"
-  state: present
+    state: present
   become: yes
   when:
     - "'sqlservers' in group_names"
@@ -37,7 +37,7 @@
   - name: Add a WP database
     mysql_db:
       name="wordpress"
-    state: present
+      state: present
     become: yes
     when:
       - "'sqlservers' in group_names"
@@ -47,7 +47,7 @@
       name="WPuser"
       password="Welkom123!"
       priv="*.*:ALL,GRANT"
-      state="present"
+      state: present
     become: yes
     when:
       - "'sqlservers' in group_names"
