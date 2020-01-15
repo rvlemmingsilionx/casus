@@ -7,9 +7,6 @@ vmscalesetname: Webscaleset
 # NFS server vars
 nfsname: NFSServer
 
-#MySQL Root password (wordt nog ge-encrypt)
-mysql_root_password: Welkom123!
-
 # Loadbalancer vars
 loadbalancername: Loadbalancer
 
