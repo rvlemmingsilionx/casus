@@ -24,7 +24,7 @@
 
 - name: Update MySQL root password for all root accounts
   mysql_user:
-    login_user
+    login_user="root"
     login_host="localhost"
     login_password=""
     update_password="Welkom123!"
