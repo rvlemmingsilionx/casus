@@ -34,10 +34,15 @@
   when:
     - "'sqlservers' in group_names"
 
-  - name: Add a WP user + database
+  - name: Add a WP database
     mysql_db:
       name: wordpress
       state: present
+    become: yes
+    when:
+      - "'sqlservers' in group_names"
+
+  - name: Add a WP user for database
     mysql_user:
       name="WPuser"
       password="Welkom123!"
