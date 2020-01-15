@@ -25,16 +25,10 @@
 - name: Update MySQL root password for all root accounts
   mysql_user:
     login_user
-#    host={{ item }}
     login_host="localhost"
     login_password=""
     update_password="Welkom123!"
     state=present
-#  with_items:
-#    - "{{ ansible_hostname }}"
-#    - 127.0.0.1
-#    - ::1
-#    - localhost
   become: yes
   when:
     - "'sqlservers' in group_names"
