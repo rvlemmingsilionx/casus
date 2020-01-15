@@ -36,6 +36,9 @@
 
 - name: Add a WP database
   mysql_db:
+    login_host: localhost
+    login_user: root
+    login_password: Welkom123!
     name: wordpress
     state: present
   become: yes
@@ -44,6 +47,9 @@
 
 - name: Add a WP user for database
   mysql_user:
+    login_host: localhost
+    login_user: root
+    login_password: Welkom123!
     name: wpuser
     password: Welkom123!
     priv: "*.*:ALL,GRANT"
