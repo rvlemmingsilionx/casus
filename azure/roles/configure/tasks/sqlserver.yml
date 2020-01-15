@@ -26,7 +26,7 @@
   mysql_user:
     login_user: root
     login_host: localhost
-    login_password: "Welkom123"
+    login_password: Welkom123!
     name: root
     password: Welkom123!
     state: present
