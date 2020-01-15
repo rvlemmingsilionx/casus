@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+
+- name: SQL VM starten.
+  azure_rm_virtualmachine:
+    resource_group: "A2S2_GROEP_03"
+    name: "Sqlserver"
+    started: yes
+    state: present
