@@ -26,7 +26,7 @@
   mysql_user:
     name=root
 #    host={{ item }}
-    host="127.0.0.1"
+    host=127.0.0.1
     password="Welkom123!"
     state=present
 #  with_items:
