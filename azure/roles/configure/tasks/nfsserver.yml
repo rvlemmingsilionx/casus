@@ -41,8 +41,7 @@
     - "'nfsservers' in group_names"
 
 - name: Setting the correct permission for wordpress
-  shell: find /var/webshare/ -type d -exec chmod 755 {} \;
-  shell: find /var/webshare/ -type d -exec chmod 644 {} \;
+  shell: find /var/webshare/ -type d -exec chmod 755 {} \; && find /var/webshare/ -type d -exec chmod 644 {} \;
   file:
     path: /var/webshare
     owner: www-data
