@@ -40,6 +40,14 @@
   when:
     - "'nfsservers' in group_names"
 
+- name: Template wp-config to NFS Server
+  template:
+    src: /templates/wp-config.j2
+    dest: /var/webshare/wp-config.php
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
 - name: Designate webshare
   lineinfile:
    path: /etc/exports
