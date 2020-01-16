@@ -11,8 +11,8 @@
     path: /var/webshare
     state: directory
     mode: '0755'
-    owner: "{{ adminname }}"
-    group: "{{ adminname }}"
+    owner: nobody
+    group: nobody
   become: yes
   when:
     - "'nfsservers' in group_names"
