@@ -5,7 +5,7 @@
   gather_facts: "{{ choice }}"
   vars_prompt:
     - name: choice
-      prompt: "Do you want to deploy the cloud solution for 'De Wolk'? (yes/no)"
+      prompt: "Do you want to deploy the compute components in Microsoft Azure for 'De Wolk'? (yes/no)"
       private: no
 
   pre_tasks:
@@ -42,7 +42,7 @@
 
   vars_prompt:
     - name: choice
-      prompt: "Do you want to configure the management node? (yes/no)"
+      prompt: "Do you want to configure the Management node? (yes/no)"
       private: no
 
   pre_tasks:
@@ -64,7 +64,7 @@
     ansible_connection: ssh
   vars_prompt:
     - name: choice
-      prompt: "Do you want to remotely configure the cloud solution for 'De Wolk'? (yes/no)"
+      prompt: "Do you want to initialize the servers in Azure for 'De Wolk'? (yes/no)"
       private: no
 
   ignore_errors: yes
