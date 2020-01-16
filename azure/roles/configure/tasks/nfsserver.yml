@@ -54,6 +54,9 @@
     owner: nobody
     group: nobody
     mode: '644'
+  become: yes
+  when:
+    - "'nfsservers' in group_names"
 
 - name: Update etab
   shell: exportfs -r
