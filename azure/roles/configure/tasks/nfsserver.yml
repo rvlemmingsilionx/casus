@@ -36,6 +36,7 @@
 
 - name: Copy WordPress content to NFS Share
   shell: cp -R /tmp/wordpress/* /var/webshare
+  become: yes
   when:
     - "'nfsservers' in group_names"
 
