@@ -26,7 +26,7 @@
   mysql_user:
     login_user: root
     login_host: localhost
-    login_password: Welkom123!
+    login_password: ""
     name: root
     password: Welkom123!
     state: present
@@ -53,6 +53,7 @@
     name: wpuser
     password: Welkom123!
     priv: "*.*:ALL,GRANT"
+    host: 0.0.0.0
     state: present
   become: yes
   when:
