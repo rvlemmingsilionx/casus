@@ -40,21 +40,6 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Setting the correct permission for the Wordpress folder/files
-  shell: find /var/webshare/ -type d -exec chmod 755 {} \; && find /var/webshare/ -type d -exec chmod 644 {} \;
-  become: yes
-  when:
-    - "'nfsservers' in group_names"
-
-- name: Setting the correct owner/group for the folders.
-  file:
-    path: /var/webshare
-    owner: www-data
-    group: www-data
-  become: yes
-  when:
-    - "'nfsservers' in group_names"
-
 - name: Designate webshare
   lineinfile:
    path: /etc/exports
