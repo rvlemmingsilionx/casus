@@ -40,21 +40,13 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Copy sample config file
-  command: mv /var/webshare/wp-config-sample.php /var/webshare/wp-config.php
-  become: yes
-  when:
-    - "'nfsservers' in group_names"
-
-- name: Update WordPress config file
-  lineinfile:
-    dest: /var/webshare/wp-config.php
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-  with_items:
-    - {'regexp': "define\\('DB_NAME', '(.)+'\\);", 'line': "define('DB_NAME', '{{ mysql_database_name }}');"}
-    - {'regexp': "define\\('DB_USER', '(.)+'\\);", 'line': "define('DB_USER', '{{ mysql_user_name }}');"}
-    - {'regexp': "define\\('DB_PASSWORD', '(.)+'\\);", 'line': "define('DB_PASSWORD', '{{ mysql_user_password }}');"}
+- name: Setting the correct permission for wordpress
+  shell: find /var/webshare/ -type d -exec chmod 755 {} \;
+  shell: find /var/webshare/ -type d -exec chmod 644 {} \;
+  file:
+    path: /var/webshare
+    owner: www-data
+    group: www-data
   become: yes
   when:
     - "'nfsservers' in group_names"
