@@ -40,13 +40,22 @@
   when:
     - "'nfsservers' in group_names"
 
-- name: Template wp-config to NFS Server
-  template:
-    src: /templates/wp-config.j2
+- name: Copy sample config file
+  command: mv /var/webshare/wp-config-sample.php /var/webshare/wp-config.php
+  become: yes
+  when:
+    - "'nfsservers' in group_names"
+
+- name: Update WordPress config file
+  lineinfile:
     dest: /var/webshare/wp-config.php
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0644'
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - {'regexp': "define\\('DB_NAME', '(.)+'\\);", 'line': "define('DB_NAME', '{{ mysql_database_name }}');"}
+    - {'regexp': "define\\('DB_USER', '(.)+'\\);", 'line': "define('DB_USER', '{{ mysql_user_name }}');"}
+    - {'regexp': "define\\('DB_PASSWORD', '(.)+'\\);", 'line': "define('DB_PASSWORD', '{{ mysql_user_password }}');"}
+  become: yes
   when:
     - "'nfsservers' in group_names"
 
