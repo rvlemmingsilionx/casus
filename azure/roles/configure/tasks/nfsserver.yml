@@ -47,6 +47,8 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0644'
+  when:
+    - "'nfsservers' in group_names"
 
 - name: Designate webshare
   lineinfile:
