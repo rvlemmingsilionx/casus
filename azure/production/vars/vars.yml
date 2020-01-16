@@ -1,33 +1,37 @@
 # Status vars
 status: present
 
-# Webscaleset vars
-vmscalesetname: Webscaleset
-
 # NFS server vars
-nfsname: NFSServer
+nfsname: DATA-01
+private_ip_nfs: 10.0.1.5
 
 # Loadbalancer vars
-loadbalancername: Loadbalancer
+loadbalancername: LB-01
 
 # Managementnode vars
-managementnaam: Managementnode
+managementnaam: MMNODE-01
+private_ip_management: 10.0.2.5
 
 # BackupServer Vars
-backupname: Backupserver
+backupname: BKP-01
+private_ip_backup: 10.0.1.6
 
 #sql server vars
-sqlname: Sqlserver
+sqlname: SQL-01
+private_ip_sql: 10.0.1.7
 
 # availability_set Vars
-availabilityset_name: availabilityset
+availabilityset_name: AVSET-01
 
-# IP address configuratie per node #
-private_ip_management: 10.0.2.5
-private_ip_nfs: 10.0.1.5
-private_ip_backup: 10.0.1.6
-private_ip_sql: 10.0.1.7
-# Addressen van de webservers zijn onderin gedefineerd in een dict
+# Webserver vars
+virtualmachine:
+  vms:
+  - vmname: WEB-01
+    ipaddress: 10.0.0.5
+    vmsize: Standard_B2s
+  - vmname: WEB-02
+    ipaddress: 10.0.0.6
+    vmsize: Standard_B2s
 
 # Network configuratie
 vnetname: MyVnet
@@ -45,6 +49,15 @@ network:
     direction: Inbound
     status: present
 
+  - nsgname: Front-End-NSG
+    rulename: HTTP
+    protocol: Tcp
+    destportrange: 80
+    access: Allow
+    priority: 101
+    direction: Inbound
+    status: present
+
   - nsgname: Management-NSG
     rulename: SSH
     protocol: Tcp
@@ -57,7 +70,7 @@ network:
   subnets:
   - subnetname: Front-End
     prefix: 10.0.0.0/24
-    securitygroup:
+    securitygroup: Front-End-NSG
     status: present
 
   - subnetname: Back-End
@@ -69,12 +82,3 @@ network:
     prefix: 10.0.2.0/24
     securitygroup: Management-NSG
     status: present
-
-virtualmachine:
-  vms:
-  - vmname: Webserver01
-    ipaddress: 10.0.0.5
-    vmsize: Standard_B2s
-  - vmname: Webserver02
-    ipaddress: 10.0.0.6
-    vmsize: Standard_B2s

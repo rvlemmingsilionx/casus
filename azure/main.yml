@@ -8,13 +8,19 @@
       prompt: "Do you want to deploy the compute components in Microsoft Azure for 'De Wolk'? (yes/no)"
       private: no
 
+    - name: env
+      prompt: "Do you want to deploy the staging or production environment? (production/staging)"
+      private: no
+      when: choice == "yes"
+
   pre_tasks:
-    - name: Include variables
+    - name: Include Production Environment variables
       include_vars: "{{ item }}"
       with_items:
-        - 'vars/secret.yml'
-        - 'vars/vars.yml'
+        - '{{ env }}/vars/secret.yml'
+        - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
+
   roles:
     - { role: deploy, when: choice  == "yes" }
 
@@ -42,19 +48,24 @@
 
   vars_prompt:
     - name: choice
-      prompt: "Do you want to configure the Management node? (yes/no)"
+      prompt: "Do you want to configure a Management node? (yes/no)"
       private: no
+
+    - name: env
+      prompt: "Do you want the staging or production environment Management node? (production/staging)"
+      private: no
+      when: choice == "yes"
 
   pre_tasks:
     - name: Include vars
       include_vars: "{{ item }}"
       with_items:
-        - 'vars/secret.yml'
-        - 'vars/vars.yml'
+        - '{{ env }}/vars/secret.yml'
+        - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
 
   roles:
-    - { role: mmnode, when: azure_state == "deployed" and choice == "yes"}
+    - { role: mmnode, when: choice == "yes"}
 
 ### Configuratie Role ###
 - hosts: servers
@@ -67,15 +78,19 @@
       prompt: "Do you want to initialize the servers in Azure for 'De Wolk'? (yes/no)"
       private: no
 
+    - name: env
+      prompt: "Do you want the staging or production environment? (production/staging)"
+      private: no
+      when: choice == "yes"
+
   ignore_errors: yes
   pre_tasks:
     - name: Include vars
       include_vars: "{{ item }}"
       with_items:
-        - 'vars/secret.yml'
-        - 'vars/vars.yml'
+        - '{{ env }}/vars/secret.yml'
+        - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
-
 
   roles:
     - { role: configure, when: choice == "yes"}
@@ -90,12 +105,17 @@
       prompt: "Do you want to start the undeployment of the cloud solution for 'De Wolk'? (yes/no)"
       private: no
 
+    - name: env
+      prompt: "Do you want to undeploy the staging or production environment? (production/staging)"
+      private: no
+      when: choice == "yes"
+
   pre_tasks:
     - name: Include vars
       include_vars: "{{ item }}"
       with_items:
-        - 'vars/secret.yml'
-        - 'vars/vars.yml'
+        - '{{ env }}/vars/secret.yml'
+        - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
 
   roles:
