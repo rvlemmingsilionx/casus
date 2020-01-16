@@ -36,7 +36,6 @@
 
 - name: Copy WordPress content to NFS Share
   shell: cp -R /tmp/wordpress/* /var/webshare
-  become: yes
   when:
     - "'nfsservers' in group_names"
 
@@ -47,6 +46,13 @@
   become: yes
   when:
     - "'nfsservers' in group_names"
+
+- name: Set correct permission for WP-config file.
+  file:
+    path: /var/webshare/wp-config-sample.php
+    owner: nobody
+    group: nobody
+    mode: '644'
 
 - name: Update etab
   shell: exportfs -r
