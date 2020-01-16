@@ -53,7 +53,7 @@
     name: wpuser
     password: Welkom123!
     priv: "*.*:ALL,GRANT"
-    host: %
+    host: "%"
     state: present
   become: yes
   when:
