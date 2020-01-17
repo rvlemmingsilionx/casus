@@ -1,7 +1,7 @@
 - name: Aanmaken NFSServer NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"_"{{ nfsname }}"
+    name: "{{ env_short }}"-"{{ nfsname }}"
     rules:
       - name: SSH
         protocol: Tcp
@@ -17,10 +17,10 @@
 - name: Aanmaken NFSserver NIC
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"_"{{ nfsname }}"
-    virtual_network: "{{ env_short }}"_"{{ vnetname }}"
-    subnet: "{{ env_short }}"_Back-End
-    security_group: "{{ env_short }}"_"{{ nfsname }}"
+    name: "{{ env_short }}"-"{{ nfsname }}"
+    virtual_network: "{{ env_short }}"-"{{ vnetname }}"
+    subnet: "{{ env_short }}"-Back-End
+    security_group: "{{ env_short }}"-"{{ nfsname }}"
     private_ip_address: "{{ private_ip_nfs }}"
     private_ip_allocation_method: Static
     state: "{{ status }}"
@@ -31,14 +31,14 @@
 - name: Aanmaken NFSServer VM
   azure_rm_virtualmachine:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"_"{{ nfsname }}"
+    name: "{{ env_short }}"-"{{ nfsname }}"
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ env_short }}"_"{{ nfsname }}"
+    network_interfaces: "{{ env_short }}"-"{{ nfsname }}"
     managed_disk_type: Standard_LRS
     image:
       offer: UbuntuServer
