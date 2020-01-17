@@ -1,7 +1,7 @@
 - name: Aanmaken loadbalancer IP
   azure_rm_publicipaddress:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"-"{{ loadbalancername }}"
+    name: "{{ env_short }}"_"{{ loadbalancername }}"
     allocation_method: static
     state: "{{ status }}"
   tags:
@@ -11,12 +11,12 @@
 - name: Aanmaken Loadbalancer
   azure_rm_loadbalancer:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"-"{{ loadbalancername }}"
+    name: "{{ env_short }}"_"{{ loadbalancername }}"
     sku: Basic
     state: "{{ status }}"
     frontend_ip_configurations:
       - name: frontendipconf0
-        public_ip_address: "{{ env_short }}"-"{{ loadbalancername }}"
+        public_ip_address: "{{ env_short }}"_"{{ loadbalancername }}"
     backend_address_pools:
       - name: backendaddrpool0
     probes:

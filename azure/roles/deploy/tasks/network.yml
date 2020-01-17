@@ -1,7 +1,7 @@
 - name: Aanmaken Vnet
   azure_rm_virtualnetwork:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"-"{{ vnetname }}"
+    name: "{{ env_short }}""{{ vnetname }}"
     address_prefixes_cidr:
       - "{{ vnetprefix }}"
     state: "{{ status }}"
@@ -12,7 +12,7 @@
 - name: Toevoegen NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"-"{{ item.nsgname }}"
+    name: "{{ env_short }}"_"{{ item.nsgname }}"
     rules:
       - name: "{{ item.rulename }}"
         protocol: "{{ item.protocol }}"
@@ -29,11 +29,11 @@
 - name: Toevoegen Subnets
   azure_rm_subnet:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"-"{{ item.subnetname }}"
+    name: "{{ env_short }}"_"{{ item.subnetname }}"
     address_prefix: "{{ item.prefix }}"
-    virtual_network: "{{ env_short }}"-"{{ vnetname }}"
+    virtual_network: "{{ env_short }}"_"{{ vnetname }}"
     state: "{{ item.status }}"
-    security_group: "{{ env_short }}"-"{{ item.securitygroup }}"
+    security_group: "{{ env_short }}"_"{{ item.securitygroup }}"
   with_items: "{{ network.subnets }}"
   tags:
   - subnet
