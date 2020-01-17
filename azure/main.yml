@@ -21,7 +21,14 @@
         - '{{ env }}/vars/secret.yml'
         - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
-
+    - set_fact:
+        env_short: PROD
+      when: env == "production"
+    - set_fact:
+        env_short: STAG
+      when: env == "staging"
+    - debug:
+        var: env_short
   roles:
     - { role: deploy, when: choice  == "yes" }
 

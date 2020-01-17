@@ -5,18 +5,7 @@
     - name: Create VNET
       azure_rm_virtualnetwork:
         resource_group: A2S2_GROEP_03
-        name: vNet01
+        name: MyVnet
         address_prefixes_cidr:
             - "10.0.0.0/16"
-    - name: Add Subnet
-      azure_rm_subnet:
-        resource_group: A2S2_GROEP_03
-        name: Front-End
-        address_prefix: "10.0.0.0/24"
-        virtual_network: vNet01
-    - name: Add backend subnet
-      azure_rm_subnet:
-        resource_group: A2S2_GROEP_03
-        name: Back-end
-        address_prefix: "10.0.1.0/24"
-        virtual_network: vNet01
+        state: absent
