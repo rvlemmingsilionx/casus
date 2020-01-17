@@ -1,13 +1,13 @@
 - name: Aanmaken Availability-set
   azure_rm_availabilityset:
-    name: "{{ env_short }}"_"{{ availabilityset_name }}"
+    name: "{{ env_short }}"-"{{ availabilityset_name }}"
     resource_group: "{{ resourcegroep }}"
     state: "{{ status }}"
 
 - name: NSG maken voor virtual machines
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}"_"{{ item.vmname }}"
+    name: "{{ env_short }}"-"{{ item.vmname }}"
     state: "{{ status }}"
     rules:
       - name: SSH
@@ -27,9 +27,9 @@
 - name: Create Virtual Network Interface Card
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroep }}"
-    name: "{{ env_short }}"_"{{ item.vmname }}"
-    virtual_network: "{{ env_short }}"_"{{ vnetname }}"
-    subnet: "{{ env_short }}"_Front-End
+    name: "{{ env_short }}"-"{{ item.vmname }}"
+    virtual_network: "{{ env_short }}"-"{{ vnetname }}"
+    subnet: "{{ env_short }}"-Front-End
     state: present
     ip_configurations:
           - name: ipconfig1
@@ -38,22 +38,22 @@
             private_ip_allocation_method: Static
             load_balancer_backend_address_pools:
               - name: backendaddrpool0
-                load_balancer: "{{ env_short }}"_"{{ loadbalancername }}"
+                load_balancer: "{{ env_short }}"-"{{ loadbalancername }}"
   with_items: "{{ virtualmachine.vms }}"
 
 - name: Aanmaken Webserver virtual machines
   azure_rm_virtualmachine:
     resource_group: "{{ resourcegroep }}"
-    name: "{{ env_short }}"_"{{ item.vmname }}"
+    name: "{{ env_short }}"-"{{ item.vmname }}"
     state: "{{ status }}"
-    availability_set: "{{ env_short }}"_"{{ availabilityset_name }}"
+    availability_set: "{{ env_short }}"-"{{ availabilityset_name }}"
     vm_size: "{{ item.vmsize }}"
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ env_short }}"_"{{ item.vmname }}"
+    network_interfaces: "{{ env_short }}"-"{{ item.vmname }}"
     image:
       offer: UbuntuServer
       publisher: Canonical
