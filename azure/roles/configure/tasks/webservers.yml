@@ -35,18 +35,6 @@
     - "'webservers' in group_names"
 
 - name: Set Apache file permissions
-  file:
-    path: /var/www/html
-    owner: www-data
-    group: www-data
-    mode: '0644'
-    recurse: yes
-  when: "'webservers' in group_names"
-
-- name: Set Apache folder permissions
-  file:
-    path: /var/www/html
-    owner: www-data
-    group: www-data
-    mode: '0775'
+  shell: chmod -R www-data:www-data /var/www/html
+  become: yes
   when: "'webservers' in group_names"
