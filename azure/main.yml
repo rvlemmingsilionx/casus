@@ -4,15 +4,14 @@
   connection: local
   gather_facts: "{{ choice }}"
   vars_prompt:
-
-    - name: env
-      prompt: "Do you want to make changes the staging or production environment? (production/staging)"
-      private: no
-
-
     - name: choice
       prompt: "Do you want to deploy the compute components in Microsoft Azure for 'De Wolk'? (yes/no)"
       private: no
+
+    - name: env
+      prompt: "Do you want to deploy the staging or production environment? (production/staging)"
+      private: no
+      when: choice == "yes"
 
   pre_tasks:
     - name: Include Production Environment variables
@@ -59,6 +58,11 @@
       prompt: "Do you want to configure a Management node? (yes/no)"
       private: no
 
+    - name: env
+      prompt: "Do you want the staging or production environment Management node? (production/staging)"
+      private: no
+      when: choice == "yes"
+
   pre_tasks:
     - name: Include vars
       include_vars: "{{ item }}"
@@ -81,6 +85,11 @@
       prompt: "Do you want to initialize the servers in Azure for 'De Wolk'? (yes/no)"
       private: no
 
+    - name: env
+      prompt: "Do you want the staging or production environment? (production/staging)"
+      private: no
+      when: choice == "yes"
+
   ignore_errors: yes
   pre_tasks:
     - name: Include vars
@@ -102,6 +111,11 @@
     - name: choice
       prompt: "Do you want to start the undeployment of the cloud solution for 'De Wolk'? (yes/no)"
       private: no
+
+    - name: env
+      prompt: "Do you want to undeploy the staging or production environment? (production/staging)"
+      private: no
+      when: choice == "yes"
 
   pre_tasks:
     - name: Include vars
