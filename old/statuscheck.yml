@@ -1,0 +1,24 @@
+- name: Check NFS server status
+  tasks:
+    - wait_for: host={{ private_ip_nfs }} port=2049 timeout=1
+    - debug: msg=NFS_ok
+
+- name: Check SQL server status
+  tasks:
+    - wait_for: host={{ private_ip_sql }} port=3306 timeout=1
+    - debug: msg=SQL_ok
+
+- name: Check backup server status
+  tasks:
+    - wait_for: host={{ private_ip_backup }} port=22 timeout=1
+    - debug: msg=Backup_ok
+
+- name: Check web1 server status
+  tasks:
+    - wait_for: host=10.0.0.5 port=80 timeout=1
+    - debug: msg=WEB2_ok
+
+- name: Check web2 server status
+  tasks:
+    - wait_for: host=10.0.0.6 port=80 timeout=1
+    - debug: msg=WEB2_ok
