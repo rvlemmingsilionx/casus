@@ -1,7 +1,5 @@
 - name: Check NFS server status
-    command: systemctl status nfs-kernel-server status
-    ignore_errors: yes
-    changed_when: false
+    shell: systemctl status nfs-kernel-server status
     register: service_nfs_status
   when:
     "'nfsservers' in group_names"
