@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  connection: local
   tasks:
   - name: Check NFS server status
     command: service nfs-kernel-server status
