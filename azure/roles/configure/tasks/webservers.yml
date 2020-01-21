@@ -34,21 +34,17 @@
   when:
     - "'webservers' in group_names"
 
-- name: Set Apache file permissions
-  file:
-    path: /var/www/html
-    owner: www-data
-    group: www-data
-    mode: '0644'
-    recurse: yes
+- name: Set Apache owner permissions
+    shell: chown -R root:www-data /var/www/html
   become: yes
   when: "'webservers' in group_names"
 
 - name: Set Apache folder permissions
-  file:
-    path: /var/www/html
-    owner: www-data
-    group: www-data
-    mode: '0775'
+    shell: find /var/www/html -type d -exec chmod 775 {} \;
+  become: yes
+  when: "'webservers' in group_names"
+
+- name: Set Apache file permissions
+    shell: find /var/www/html -type f -exec chmod 644 {} \;
   become: yes
   when: "'webservers' in group_names"
