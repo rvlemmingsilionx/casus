@@ -1,16 +1,16 @@
 - name: Remove Webserver virtual machines
   azure_rm_virtualmachine:
     resource_group: "{{ resourcegroep }}"
-    name: "{{ item.vmname }}"
+    name: "{{ env_short}}-{{ item.vmname }}"
     state: absent
-    availability_set: "{{ availabilityset_name }}"
+    availability_set: "{{ env_short}}-{{ availabilityset_name }}"
     vm_size: "{{ item.vmsize }}"
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ item.vmname }}"
+    network_interfaces: "{{ env_short}}-{{ item.vmname }}"
     image:
       offer: UbuntuServer
       publisher: Canonical
@@ -21,9 +21,9 @@
 - name: Remove Virtual Network Interface Card
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroep }}"
-    name: "{{ item.vmname }}"
-    virtual_network: "{{ vnetname }}"
-    subnet: Front-End
+    name: "{{ env_short}}-{{ item.vmname }}"
+    virtual_network: "{{ env_short}}-{{ vnetname }}"
+    subnet: "{{ env_short}}-Front-End"
     state: absent
     ip_configurations:
           - name: ipconfig1
@@ -31,13 +31,13 @@
             private_ip_address: "{{ item.ipaddress }}"
             load_balancer_backend_address_pools:
               - name: backendaddrpool0
-                load_balancer: "{{ loadbalancername }}"
+                load_balancer: "{{ env_short}}-{{ loadbalancername }}"
   with_items: "{{ virtualmachine.vms }}"
 
 - name: Remove Webserver NSG
   azure_rm_securitygroup:
     resource_group: A2S2_GROEP_03
-    name: "{{ item.vmname }}"
+    name: "{{ env_short}}-{{ item.vmname }}"
     state: absent
     rules:
       - name: SSH
@@ -57,21 +57,21 @@
 
 - name: Remove Availability-set
   azure_rm_availabilityset:
-    name: "{{ availabilityset_name }}"
+    name: "{{ env_short}}-{{ availabilityset_name }}"
     resource_group: "{{ resourcegroep }}"
     state: absent
 
 - name: Remove Backup-VM
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03
-    name: "{{ backupname }}"
+    name: "{{ env_short}}-{{ backupname }}"
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ backupname }}"
+    network_interfaces: "{{ env_short}}-{{ backupname }}"
     managed_disk_type: Standard_LRS
     image:
       offer: UbuntuServer
@@ -87,10 +87,10 @@
 - name: Remove virtual nic for Backupserver
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ backupname }}"
-    virtual_network: "{{ vnetname }}"
-    subnet: Back-End
-    security_group: "{{ backupname }}"
+    name: "{{ env_short}}-{{ backupname }}"
+    virtual_network: "{{ env_short}}-{{ vnetname }}"
+    subnet: "{{ env_short}}-Back-End"
+    security_group: "{{ env_short}}-{{ backupname }}"
     private_ip_address: "{{ private_ip_backup }}"
     private_ip_allocation_method: Static
     state: absent
@@ -102,7 +102,7 @@
 - name: Remove Network Security Group Backupserver
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ backupname }}"
+    name: "{{ env_short}}-{{ backupname }}"
     rules:
       - name: SSH
         protocol: Tcp
@@ -118,14 +118,14 @@
 - name: Remove SQL-VM
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03
-    name: "{{ sqlname }}"
+    name: "{{ env_short}}-{{ sqlname }}"
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ sqlname }}"
+    network_interfaces: "{{ env_short}}-{{ sqlname }}"
     managed_disk_type: Standard_LRS
     image:
       offer: UbuntuServer
@@ -141,10 +141,10 @@
 - name: Remove virtual nic for Sqlserver
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ sqlname }}"
-    virtual_network: "{{ vnetname }}"
-    subnet: Back-End
-    security_group: "{{ sqlname }}"
+    name: "{{ env_short}}-{{ sqlname }}"
+    virtual_network: "{{ env_short}}-{{ vnetname }}"
+    subnet: "{{ env_short}}-Back-End"
+    security_group: "{{ env_short}}-{{ sqlname }}"
     private_ip_address: "{{ private_ip_sql }}"
     private_ip_allocation_method: Static
     state: absent
@@ -156,7 +156,7 @@
 - name: Remove Network Security Group Sqlserver
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ sqlname }}"
+    name: "{{ env_short}}-{{ sqlname }}"
     rules:
       - name: SSH
         protocol: Tcp
@@ -172,14 +172,14 @@
 - name: Remove NFSServer
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03
-    name: "{{ nfsname }}"
+    name: "{{ env_short}}-{{ nfsname }}"
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ nfsname }}"
+    network_interfaces: "{{ env_short}}-{{ nfsname }}"
     managed_disk_type: Standard_LRS
     image:
       offer: UbuntuServer
@@ -195,10 +195,10 @@
 - name: Remove virtual nic for nfsserver
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ nfsname }}"
-    virtual_network: "{{ vnetname }}"
-    subnet: Back-End
-    security_group: "{{ nfsname }}"
+    name: "{{ env_short}}-{{ nfsname }}"
+    virtual_network: "{{ env_short}}-{{ vnetname }}"
+    subnet: "{{ env_short}}-Back-End"
+    security_group: "{{ env_short}}-{{ nfsname }}"
     private_ip_address: "{{ private_ip_nfs }}"
     private_ip_allocation_method: Static
     state: absent
@@ -209,7 +209,7 @@
 - name: Remove Network Security Group for nfsserver
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ nfsname }}"
+    name: "{{ env_short}}-{{ nfsname }}"
     rules:
       - name: SSH
         protocol: Tcp
@@ -226,14 +226,14 @@
 - name: remove VM managementnode
   azure_rm_virtualmachine:
     resource_group: A2S2_GROEP_03
-    name: "{{ managementnaam }}"
+    name: "{{ env_short}}-{{ managementnaam }}"
     vm_size: Standard_B2s
     admin_username: "{{ adminname }}"
     ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ adminname }}/.ssh/authorized_keys
         key_data: "{{ sshkey }}"
-    network_interfaces: "{{ managementnaam }}"
+    network_interfaces: "{{ env_short}}-{{ managementnaam }}"
     managed_disk_type: Standard_LRS
     image:
       offer: UbuntuServer
@@ -248,11 +248,11 @@
 - name: remove virtual network interface card
   azure_rm_networkinterface:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ managementnaam }}"
-    virtual_network: "{{ vnetname }}"
-    subnet: Management
-    security_group: Management-NSG
-    public_ip_name: "{{ managementnaam }}"
+    name: "{{ env_short}}-{{ managementnaam }}"
+    virtual_network: "{{ env_short}}-{{ vnetname }}"
+    subnet: "{{ env_short}}-Management"
+    security_group: "{{ env_short}}-Management-NSG"
+    public_ip_name: "{{ env_short}}-{{ managementnaam }}"
     private_ip_allocation_method: Static
     private_ip_address: "{{ private_ip_management }}"
     state: absent
@@ -263,7 +263,7 @@
 - name: remove Network Security Group that allows SSH
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ managementnaam }}"
+    name: "{{ env_short}}-{{ managementnaam }}"
     rules:
       - name: SSH
         protocol: Tcp
@@ -279,7 +279,7 @@
   azure_rm_publicipaddress:
     resource_group: "{{ resourcegroup }}"
     allocation_method: Static
-    name: "{{ managementnaam }}"
+    name: "{{ env_short}}-{{ managementnaam }}"
     state: absent
   tags:
   - management
@@ -288,10 +288,10 @@
 - name: remove Loadbalancer
   azure_rm_loadbalancer:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ loadbalancername }}"
+    name: "{{ env_short}}-{{ loadbalancername }}"
     sku: Basic
     state: absent
-    public_ip: "{{ loadbalancername }}"
+    public_ip: "{{ env_short}}-{{ loadbalancername }}"
     probe_protocol: Tcp
     probe_port: 80
     probe_interval: 10
@@ -311,7 +311,7 @@
 - name: remove loadbalancer IP
   azure_rm_publicipaddress:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ loadbalancername }}"
+    name: "{{ env_short}}-{{ loadbalancername }}"
     allocation_method: static
     state: absent
   tags:
@@ -321,11 +321,11 @@
 - name: Remove Subnets
   azure_rm_subnet:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ item.subnetname }}"
+    name: "{{ env_short}}-{{ item.subnetname }}"
     address_prefix: "{{ item.prefix }}"
-    virtual_network: "{{ vnetname }}"
+    virtual_network: "{{ env_short}}-{{ vnetname }}"
     state: absent
-    security_group: "{{ item.securitygroup }}"
+    security_group: "{{ env_short}}-{{ item.securitygroup }}"
   with_items: "{{ network.subnets }}"
   tags:
   - subnet
@@ -334,7 +334,7 @@
 - name: Remove NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ item.nsgname }}"
+    name: "{{ env_short}}-{{ item.nsgname }}"
     rules:
       - name: "{{ item.rulename }}"
         protocol: "{{ item.protocol }}"
@@ -353,7 +353,7 @@
 - name: remove Vnet
   azure_rm_virtualnetwork:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ vnetname }}"
+    name: "{{ env_short}}-{{ vnetname }}"
     address_prefixes_cidr:
       - "{{ vnetprefix }}"
     state: absent
