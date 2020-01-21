@@ -41,6 +41,7 @@
     group: www-data
     mode: '0644'
     recurse: yes
+  become: yes
   when: "'webservers' in group_names"
 
 - name: Set Apache folder permissions
@@ -49,4 +50,5 @@
     owner: www-data
     group: www-data
     mode: '0775'
+  become: yes
   when: "'webservers' in group_names"
