@@ -2,7 +2,7 @@
 - hosts: localhost
   tasks:
   - name: Check NFS server status
-    command: systemctl nfs-kernel-server status
+    command: service nfs-kernel-server status
     ignore_errors: yes
     changed_when: false
     register: service_nfs_status
