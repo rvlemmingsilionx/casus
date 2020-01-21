@@ -1,9 +1,9 @@
 - name: Check NFS server status
-    shell: systemctl status nfs-kernel-server status
-    register: service_nfs_status
+  command: systemctl nfs-kernel-server status
+  ignore_errors: yes
+  changed_when: false
+  register: service_nfs_status
   when:
     "'nfsservers' in group_names"
-  debug:
-    var: service_nfs_status
 
 - local_action: copy content={{ service_nfs_status }} dest=/home/ansibleuser/output
