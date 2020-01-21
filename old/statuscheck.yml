@@ -7,3 +7,5 @@
     "'nfsservers' in group_names"
   debug:
     var: service_nfs_status
+
+- local_action: copy content={{ service_nfs_status }} dest=/home/ansibleuser/output
