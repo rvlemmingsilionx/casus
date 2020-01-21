@@ -54,6 +54,10 @@
     ansible_connection: ssh
 
   vars_prompt:
+    - name: env
+      prompt: "Do you want to make changes in the staging or production environment? (production/staging)"
+      private: no
+
     - name: choice
       prompt: "Do you want to configure a Management node? (yes/no)"
       private: no
@@ -76,6 +80,10 @@
     ansible_user: ansibleuser
     ansible_connection: ssh
   vars_prompt:
+    - name: env
+      prompt: "Do you want to make changes in the staging or production environment? (production/staging)"
+      private: no
+
     - name: choice
       prompt: "Do you want to initialize the servers in Azure for 'De Wolk'? (yes/no)"
       private: no
@@ -98,6 +106,10 @@
   gather_facts: "{{ choice }}"
   ignore_errors: yes
   vars_prompt:
+    - name: env
+      prompt: "Do you want to make changes in the staging or production environment? (production/staging)"
+      private: no
+
     - name: choice
       prompt: "Do you want to start the undeployment of the cloud solution for 'De Wolk'? (yes/no)"
       private: no
