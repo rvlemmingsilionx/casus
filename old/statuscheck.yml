@@ -6,6 +6,7 @@
       name: "nfs-kernel-server"
       state: started
       enabled: yes
+    become: yes
 
   - name: Check NFS Status
     command: systemctl show -p ActiveState nfs-kernel-server | sed 's/ActiveState=//g'
