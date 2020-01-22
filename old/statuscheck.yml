@@ -7,10 +7,11 @@
       state: started
       enabled: yes
 
-  - name: Get service facts
-    service-facts:
+  - name: Check NFS Status
+    command: systemctl -q is-active nfs-kernel-servers
+    check_mode: no
+    failed_when: false
+    changed_when: false
+    register: nfs_service_status
 
-  - name: Get NFS facts
-    debug:
-      var: ansible_facts.services["nfs-kernel-server.service"]
-  - local_action: copy content={{ ansible_facts.services["nfs-kernel-server.service"] }} dest=/home/ansibleuser/output
+  - local_action: copy content={{ nfs_service_status }} dest=/home/ansibleuser/output
