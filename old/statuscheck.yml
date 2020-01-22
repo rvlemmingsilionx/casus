@@ -16,10 +16,4 @@
     register: nfs_service_status
     become: yes
 
-  - name: Write results
-    local_action: copy content="NFS-kernal-server is up!" dest=/home/ansibleuser/output
-    when: {{ nfs_service_status.failed }} == 'failed'
-
-  - name: Write results
-    local_action: copy content="NFS-kernal-server is down!" dest=/home/ansibleuser/output
-    when: "{{ nfs_service_status.failed }}" != 'failed'
+  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status | to_nice_yaml | grep -i failed }}" dest=/home/ansibleuser/output
