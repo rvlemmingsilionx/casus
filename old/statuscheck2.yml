@@ -1,0 +1,17 @@
+---
+- hosts: 192.168.1.5
+  tasks:
+  - name: Check if NFS is running.
+    service:
+      name: "nfs-kernel-server"
+      state: started
+      enabled: yes
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+
+  - debug:
+    var: ansible_facts.services
+
+  - local_action: copy content="{{ ansible_facts.services }}" dest=/home/ansibleuser/output
