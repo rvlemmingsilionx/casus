@@ -13,4 +13,4 @@
   - name: Get NFS facts
     debug:
       var: ansible_facts.services["nfs-kernel-server.service"]
-  - local_action: copy content={{ var }} dest=/home/ansibleuser/output
+  - local_action: copy content=ansible_facts.services["nfs-kernel-server.service"] dest=/home/ansibleuser/output
