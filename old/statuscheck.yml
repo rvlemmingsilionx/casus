@@ -14,4 +14,8 @@
     changed_when: false
     register: nfs_service_status
 
-  - local_action: copy content={{ nfs_service_status }} dest=/home/ansibleuser/output
+  - name: Log output into variable.
+    vars:
+      nfs_status: "NFS-kernel-server is {{ (nfs_service_status.rc == 0) | ternary('up', 'down') }}"
+
+  - local_action: copy content={{ nfs_status }} dest=/home/ansibleuser/output
