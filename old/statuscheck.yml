@@ -8,10 +8,10 @@
       enabled: yes
 
   - name: Check NFS Status
-    command: systemctl -q is-active nfs-kernel-servers
+    command: systemctl show -p ActiveState nfs-kernel-server | sed 's/ActiveState=//g'
     check_mode: no
     failed_when: false
     changed_when: false
     register: nfs_service_status
 
-  - local_action: copy content="NFS-kernel-server is {{ (nfs_service_status.rc == 0) | ternary('up', 'down') }}" dest=/home/ansibleuser/output
+  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status }}" dest=/home/ansibleuser/output
