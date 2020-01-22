@@ -1,13 +1,14 @@
 ---
-- hosts: localhost
-  connection: local
+- hosts: 192.168.1.5
   tasks:
-  - name: Check NFS server status
-    command: service nfs-kernel-server status
-    ignore_errors: yes
-    changed_when: false
-    register: service_nfs_status
-    when:
-      "'nfsservers' in group_names"
+  - name: Check if NFS is running.
+    service:
+      name: "nfs-kernel-server"
+      state: started
+      enabled: yes
+    become: yes
 
-  - local_action: copy content={{ service_nfs_status }} dest=/home/ansibleuser/output
+  - name: Check NFS Status
+    service_facts:
+
+  - local_action: copy content=ansible_facts.services['nfs-kernel-server'] dest=/home/ansibleuser/output
