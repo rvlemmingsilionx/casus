@@ -24,6 +24,8 @@
     - software-properties-common
     - ansible
     - git
+    - apache2
+    - php
     update_cache: yes
   become: yes
 
@@ -47,3 +49,18 @@
     regexp: '^#host_key_checking = False'
     line: host_key_checking = False
   become: yes
+
+- name: Add facts playbook to cron
+  cron:
+    name: "Get facts playbook"
+    minute: "*"
+    hour: "*"
+    job: "ansible-playbook /home/ansibleuser/casus/azure facts.yml -i /home/ansibleuser/casus/azure/hostsprod"
+
+- name: Copying output files to webserver
+  shell: cp
+
+- name: Remove old index file
+  file:
+    path: /var/www/html/index.html
+    state: absent
