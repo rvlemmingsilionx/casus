@@ -11,7 +11,4 @@
   - name: Get service facts
     service_facts:
 
-  - debug:
-    var: ansible_facts.services
-
   - local_action: copy content="{{ ansible_facts.services }}" dest=/home/ansibleuser/output
