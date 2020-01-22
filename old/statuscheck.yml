@@ -6,6 +6,6 @@
       name: "nfs-kernel-server"
       state: started
       enabled: yes
-      register: service_nfs_status
+      #register: service_nfs_status
 
-  - local_action: copy content={{ service_nfs_status }} dest=/home/ansibleuser/output
+  #- local_action: copy content={{ service_nfs_status }} dest=/home/ansibleuser/output
