@@ -16,4 +16,4 @@
     register: nfs_service_status
     become: yes
 
-  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status | to_nice_yaml}}" dest=/home/ansibleuser/output
+  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status.failed | to_nice_yaml}}" dest=/home/ansibleuser/output
