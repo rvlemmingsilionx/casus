@@ -15,4 +15,4 @@
     changed_when: false
     register: nfs_service_status
 
-  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status }}" dest=/home/ansibleuser/output
+  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status.ActiveState }}" dest=/home/ansibleuser/output
