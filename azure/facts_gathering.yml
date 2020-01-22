@@ -1,0 +1,28 @@
+---
+- hosts: 192.168.1.5
+  tasks:
+  - name: Check if NFS is running.
+    service:
+      name: "nfs-kernel-server"
+      state: started
+      enabled: yes
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+  - local_action: copy content="{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" dest=/var/www/html/nfsserver.txt
+
+- hosts: 192.168.1.6
+  tasks:
+  - name: Check if backup is running.
+    service:
+      name: "sshd"
+      state: started
+      enabled: yes
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+  - local_action: copy content="{{ service_facts.ansible_facts.services['sshd'] | to_nice_yaml }}" dest=/var/www/html/backupserver.txt
