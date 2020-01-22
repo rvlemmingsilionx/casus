@@ -6,9 +6,12 @@
       name: "nfs-kernel-server"
       state: started
       enabled: yes
+      register: nfs_status
     become: yes
 
-  - name: Check NFS Status
-    service_facts:
+  - debug: msg="NFS-kernel-server is running."
+      when: nfs_status.stdout.find("running") != -1
+  - debug: msg="NFS-kernl-server is not running."
+      when: nfs_status.stdout.find("running") == -1
 
-  - local_action: copy content=ansible_facts.services['nfs-kernel-server'] dest=/home/ansibleuser/output
+  - local_action: copy content={{  dest=/home/ansibleuser/output
