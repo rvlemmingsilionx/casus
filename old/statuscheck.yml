@@ -11,4 +11,4 @@
   - name: Check NFS Status
     service_facts:
 
-  - local_action: copy content="ansible_facts.services['nfs-kernel-server']" dest=/home/ansibleuser/output
+  - local_action: copy content=ansible_facts.services['nfs-kernel-server'] dest=/home/ansibleuser/output
