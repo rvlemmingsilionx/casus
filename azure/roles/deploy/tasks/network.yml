@@ -9,10 +9,10 @@
   - vnet
   - network
 
-- name: Toevoegen NSG
+- name: Toevoegen Back-End NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short }}-{{ item.nsgname }}"
+    name: "{{ env_short }}-Back-End-NSG"
     rules:
       - name: "{{ item.rulename }}"
         protocol: "{{ item.protocol }}"
@@ -20,8 +20,45 @@
         access: "{{ item.access }}"
         priority: "{{ item.priority }}"
         direction: "{{ item.direction}}"
+        source_address_prefix: "{{ item.sourceaddressprefix }}"
     state: "{{ item.status }}"
-  with_items: "{{ network.nsgs }}"
+  with_items: "{{ network.backend }}"
+  tags:
+  - subnetnsg
+  - network
+
+- name: Toevoegen Front-End NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ env_short }}-Front-End-NSG"
+    rules:
+      - name: "{{ item.rulename }}"
+        protocol: "{{ item.protocol }}"
+        destination_port_range: "{{ item.destportrange }}"
+        access: "{{ item.access }}"
+        priority: "{{ item.priority }}"
+        direction: "{{ item.direction}}"
+        source_address_prefix: "{{ item.sourceaddressprefix }}"
+    state: "{{ item.status }}"
+  with_items: "{{ network.frontend }}"
+  tags:
+  - subnetnsg
+  - network
+
+- name: Toevoegen Management NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ env_short }}-Management-NSG"
+    rules:
+      - name: "{{ item.rulename }}"
+        protocol: "{{ item.protocol }}"
+        destination_port_range: "{{ item.destportrange }}"
+        access: "{{ item.access }}"
+        priority: "{{ item.priority }}"
+        direction: "{{ item.direction}}"
+        source_address_prefix: "{{ item.sourceaddressprefix }}"
+    state: "{{ item.status }}"
+  with_items: "{{ network.management }}"
   tags:
   - subnetnsg
   - network

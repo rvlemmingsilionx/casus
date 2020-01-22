@@ -69,6 +69,12 @@
         - '{{ env }}/vars/secret.yml'
         - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
+    - set_fact:
+        env_short: PROD
+      when: env == "production"
+    - set_fact:
+        env_short: STAG
+      when: env == "staging"
 
   roles:
     - { role: mmnode, when: choice == "yes"}
@@ -96,6 +102,12 @@
         - '{{ env }}/vars/secret.yml'
         - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
+    - set_fact:
+        env_short: PROD
+      when: env == "production"
+    - set_fact:
+        env_short: STAG
+      when: env == "staging"
 
   roles:
     - { role: configure, when: choice == "yes"}
@@ -121,6 +133,12 @@
         - '{{ env }}/vars/secret.yml'
         - '{{ env }}/vars/vars.yml'
       when: choice == "yes"
+    - set_fact:
+        env_short: PROD
+      when: env == "production"
+    - set_fact:
+        env_short: STAG
+      when: env == "staging"
 
   roles:
     - { role: undeploy, when: choice == "yes" }

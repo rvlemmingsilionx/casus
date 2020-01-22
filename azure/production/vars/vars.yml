@@ -39,46 +39,124 @@ vnetprefix: 10.0.0.0/16
 
 # Subnet en NSG configuratie per subnet
 network:
-  nsgs:
-  - nsgname: Back-End-NSG
-    rulename: SSH
-    protocol: Tcp
-    destportrange: 22
-    access: Allow
-    priority: 100
-    direction: Inbound
-    status: present
+  backend:
+    - rulename: SSH
+      protocol: Tcp
+      destportrange: 22
+      access: Allow
+      priority: 100
+      direction: Inbound
+      sourceaddressprefix: 10.0.2.0/29
+      status: present
 
-  - nsgname: Front-End-NSG
-    rulename: HTTP
-    protocol: Tcp
-    destportrange: 80
-    access: Allow
-    priority: 101
-    direction: Inbound
-    status: present
+    - rulename: SQL
+      protocol: "*"
+      destportrange: 3306
+      sourceaddressprefix:
+        - 10.0.0.0/28
+      access: Allow
+      priority: 101
+      direction: Inbound
+      status: present
 
-  - nsgname: Management-NSG
-    rulename: SSH
-    protocol: Tcp
-    destportrange: 22
-    access: Allow
-    priority: 100
-    direction: Inbound
-    status: present
+    - rulename: NFS
+      protocol: "*"
+      destportrange:
+        - 111
+        - 2049
+      sourceaddressprefix:
+        - 10.0.0.0/28
+      access: Allow
+      priority: 102
+      direction: Inbound
+      status: present
+
+    - rulename: Deny-the-rest
+      access: Deny
+      priority: 200
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+      destportrange: "*"
+      protocol: "*"
+
+  frontend:
+    - rulename: SSH
+      protocol: Tcp
+      destportrange: 22
+      sourceaddressprefix: 10.0.2.0/29
+      access: Allow
+      priority: 100
+      direction: Inbound
+      status: present
+
+    - rulename: HTTP
+      protocol: Tcp
+      destportrange: 80
+      access: Allow
+      priority: 101
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+
+    - rulename: AllowLoadbalancer
+      protocol: "*"
+      sourceaddressprefix: AzureLoadBalancer
+      access: Allow
+      priority: 103
+      direction: Inbound
+      status: present
+      destportrange: "*"
+
+    - rulename: Deny-the-rest
+      access: Deny
+      priority: 200
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+      destportrange: "*"
+      protocol: "*"
+
+  management:
+    - rulename: SSH
+      protocol: Tcp
+      destportrange: 22
+      access: Allow
+      priority: 100
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+
+    - rulename: HTTP
+      protocol: Tcp
+      destportrange: 80
+      access: Allow
+      priority: 101
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+
+    - rulename: Deny-the-rest
+      access: Deny
+      priority: 200
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+      protocol: "*"
+      destportrange: "*"
 
   subnets:
   - subnetname: Front-End
-    prefix: 10.0.0.0/24
+    prefix: 10.0.0.0/28
     securitygroup: Front-End-NSG
     status: present
 
   - subnetname: Back-End
-    prefix: 10.0.1.0/24
+    prefix: 10.0.1.0/28
     securitygroup: Back-End-NSG
     status: present
 
   - subnetname: Management
-    prefix: 10.0.2.0/24
+    prefix: 10.0.2.0/29
     securitygroup: Management-NSG
     status: present
