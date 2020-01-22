@@ -1,7 +1,7 @@
 ---
 - hosts: 192.168.1.5
   tasks:
-  - name: Check if NFS is running.
+  - name: Check if NFS is running. # Moet nog een SSH check worden toegevoegd
     service:
       name: "nfs-kernel-server"
       state: started
@@ -26,3 +26,45 @@
     service_facts:
     register: service_facts
   - local_action: copy content="{{ service_facts.ansible_facts.services['sshd'] | to_nice_yaml }}" dest=/var/www/html/backupserver.txt
+
+- hosts: 192.168.1.7
+  tasks:
+  - name: Check if SQL is running.
+    service:
+      name: "mysql"
+      state: started
+      enabled: yes
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+  - local_action: copy content="{{ service_facts.ansible_facts.services['mysql'] | to_nice_yaml }}" dest=/var/www/html/sqlserver.txt
+
+- hosts: 192.168.0.5
+  tasks:
+  - name: Check if WEB01 is running.
+    service:
+      name: "apache"
+      state: started
+      enabled: yes
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+  - local_action: copy content="{{ service_facts.ansible_facts.services['apache'] | to_nice_yaml }}" dest=/var/www/html/web01server.txt
+
+- hosts: 192.168.0.6
+  tasks:
+  - name: Check if WEB02 is running.
+    service:
+      name: "apache"
+      state: started
+      enabled: yes
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+  - local_action: copy content="{{ service_facts.ansible_facts.services['apache'] | to_nice_yaml }}" dest=/var/www/html/web02server.txt
