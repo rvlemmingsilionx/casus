@@ -6,6 +6,7 @@
       name: "nfs-kernel-server"
       state: started
       enabled: yes
+      #test
       register: nfs_status
     become: yes
 
@@ -15,3 +16,5 @@
       when: nfs_status.stdout.find("running") == -1
 
   - local_action: copy content={{  dest=/home/ansibleuser/output
+
+#test
