@@ -9,11 +9,6 @@
     become: yes
 
   - name: Check NFS Status
-    command: systemctl show -p ActiveState nfs-kernel-server | sed 's/ActiveState=//g'
-    check_mode: no
-    failed_when: false
-    changed_when: false
-    register: nfs_service_status
-    become: yes
+    service_facts:
 
-  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status | to_nice_yaml }}" dest=/home/ansibleuser/output
+  - local_action: copy content="ansible_facts.services['nfs-kernel-server']" dest=/home/ansibleuser/output
