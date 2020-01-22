@@ -6,15 +6,14 @@
       name: "nfs-kernel-server"
       state: started
       enabled: yes
-      #test
-      register: nfs_status
     become: yes
 
-  - debug: msg="NFS-kernel-server is running."
-      when: nfs_status.stdout.find("running") != -1
-  - debug: msg="NFS-kernl-server is not running."
-      when: nfs_status.stdout.find("running") == -1
+  - name: Check NFS Status
+    shell: systemctl show -p ActiveState nfs-kernel-server | sed 's/ActiveState=//g'
+    #check_mode: no
+    #failed_when: false
+    #changed_when: false
+    register: nfs_service_status
+    become: yes
 
-  - local_action: copy content={{  dest=/home/ansibleuser/output
-
-#test
+  - local_action: copy content="NFS-kernel-server is {{ nfs_service_status }}" dest=/home/ansibleuser/output
