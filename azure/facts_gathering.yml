@@ -3,14 +3,18 @@
   tasks:
   - name: Check if NFS is running. # Moet nog een SSH check worden toegevoegd
     service:
-      name: "nfs-kernel-server"
+      name: {{ "item" }}
       state: started
       enabled: yes
+    with_items:
+      - nfs-kernel-server
+      - sshd
     become: yes
 
   - name: Get service facts
     service_facts:
     register: service_facts
+  - local_action: copy content="{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" dest=/var/www/html/nfsserver.txt
   - local_action: copy content="{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" dest=/var/www/html/nfsserver.txt
 
 - hosts: 192.168.1.6
