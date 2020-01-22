@@ -3,7 +3,7 @@
   tasks:
   - name: Check if NFS is running. # Moet nog een SSH check worden toegevoegd
     service:
-      name: {{ "item" }}
+      name: ''{{ item }}''
       state: started
       enabled: yes
     with_items:
