@@ -3,12 +3,12 @@
   tasks:
   - name: Check if NFS is running. # Moet nog een SSH check worden toegevoegd
     service:
-      name: "{{ item }}"
+      name: nfs-kernel-server #"{{ item }}"
       state: started
       enabled: yes
-    with_items:
-      - nfs-kernel-server
-      - sshd
+#    with_items:
+#      - nfs-kernel-server
+#      - sshd
     become: yes
 
   - name: Get service facts
