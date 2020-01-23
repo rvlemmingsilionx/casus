@@ -14,13 +14,9 @@
   - name: Get service facts
     service_facts:
     register: service_facts
-  - local_action: copy content= "{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" dest=/var/www/html/nfsserver.txt
+  - local_action: copy content= "{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" dest=/home/ansibleuser/nfsserver.txt
     become: yes
     #blockinfile:
     #  path: /var/www/html/nfsserver.txt
     #  block: "{{ service_facts.ansible_facts.services['sshd'] | to_nice_yaml }}"
   #- local_action: copy content="{{ service_facts.ansible_facts.services['sshd'] | to_nice_yaml }}" dest=/var/www/html/nfsserver.txt #/var/www/html/nfsserver.txt
-
-  - name: debug
-    debug:
-      msg: "{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}"
