@@ -15,7 +15,7 @@
     service_facts:
     register: service_facts
     local_action:
-      copy: content= "{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" dest=/home/ansibleuser/nfsserver.txt
+      copy: content="{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" dest=/home/ansibleuser/nfsserver.txt
     become: yes
     #blockinfile:
     #  path: /var/www/html/nfsserver.txt
