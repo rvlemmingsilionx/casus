@@ -23,7 +23,7 @@
       group: nogroup
       owner: nobody
       mode: 0775
-      delegate_to: 127.0.0.1
+    delegate_to: 127.0.0.1
 
 #  - name: Put variables into file.
 #    local_action:
