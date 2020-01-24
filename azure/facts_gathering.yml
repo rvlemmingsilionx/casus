@@ -26,9 +26,9 @@
     delegate_to: 127.0.0.1
     become: yes
 
-#  - name: Put variables into file.
-#    local_action:
-#    copy:
-#      content='"{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" \n {{ service_facts.ansible_facts.services['sshd'] | to_nice_yaml }}'
-#      dest=/var/www/html/nfsserver.txt
-#    become: yes
+  - name: Put variables into file.
+    copy:
+      content='"{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}" \n {{ service_facts.ansible_facts.services['sshd'] | to_nice_yaml }}'
+      dest=/var/www/html/nfsserver.txt
+    delegate_to: 127.0.0.1
+    become: yes
