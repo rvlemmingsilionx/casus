@@ -1,3 +1,4 @@
+####################  NFS  ####################
 ---
 - hosts: 192.168.1.5
   tasks:
@@ -72,5 +73,119 @@
       create: no
     with_items:
       - "{{ service_facts.ansible_facts.services['ssh'] | to_nice_yaml }}"
+    delegate_to: 127.0.0.1
+    become: yes
+
+####################  SQL  ####################
+
+- hosts: 192.168.1.7
+  tasks:
+  - name: Check if SQL is running. # Moet nog een SSH check worden toegevoegd
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+      - mysql
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+
+  - name: Create empty file if not present
+    copy:
+      content: ""
+      dest: /var/www/html/sqlserver.txt
+      force: yes
+      group: nogroup
+      owner: nobody
+      mode: 0775
+    delegate_to: 127.0.0.1
+    become: yes
+
+  - name: Put variables into file.
+    lineinfile:
+      path: /var/www/html/sqlserver.txt
+      line: "{{ item }}"
+      create: no
+    with_items:
+      - "{{ service_facts.ansible_facts.services['mysql'] | to_nice_yaml }}"
+    delegate_to: 127.0.0.1
+    become: yes
+
+####################  WEB01  ####################
+
+- hosts: 192.168.0.5
+  tasks:
+  - name: Check if WEB01 is running. # Moet nog een SSH check worden toegevoegd
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+      - apache
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+
+  - name: Create empty file if not present
+    copy:
+      content: ""
+      dest: /var/www/html/web01server.txt
+      force: yes
+      group: nogroup
+      owner: nobody
+      mode: 0775
+    delegate_to: 127.0.0.1
+    become: yes
+
+  - name: Put variables into file.
+    lineinfile:
+      path: /var/www/html/web01server.txt
+      line: "{{ item }}"
+      create: no
+    with_items:
+      - "{{ service_facts.ansible_facts.services['apache'] | to_nice_yaml }}"
+    delegate_to: 127.0.0.1
+    become: yes
+
+####################  WEB02  ####################
+
+- hosts: 192.168.0.6
+  tasks:
+  - name: Check if WEB02 is running. # Moet nog een SSH check worden toegevoegd
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+      - apache
+    become: yes
+
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+
+  - name: Create empty file if not present
+    copy:
+      content: ""
+      dest: /var/www/html/web02server.txt
+      force: yes
+      group: nogroup
+      owner: nobody
+      mode: 0775
+    delegate_to: 127.0.0.1
+    become: yes
+
+  - name: Put variables into file.
+    lineinfile:
+      path: /var/www/html/web02server.txt
+      line: "{{ item }}"
+      create: no
+    with_items:
+      - "{{ service_facts.ansible_facts.services['apache'] | to_nice_yaml }}"
     delegate_to: 127.0.0.1
     become: yes
