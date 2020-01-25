@@ -331,10 +331,10 @@
   - subnet
   - network
 
-- name: Remove NSG
+- name: Verwijderen Back-End NSG
   azure_rm_securitygroup:
     resource_group: "{{ resourcegroup }}"
-    name: "{{ env_short}}-{{ item.nsgname }}"
+    name: "{{ env_short }}-Back-End-NSG"
     rules:
       - name: "{{ item.rulename }}"
         protocol: "{{ item.protocol }}"
@@ -342,8 +342,45 @@
         access: "{{ item.access }}"
         priority: "{{ item.priority }}"
         direction: "{{ item.direction}}"
+        source_address_prefix: "{{ item.sourceaddressprefix }}"
     state: absent
-  with_items: "{{ network.nsgs}}"
+  with_items: "{{ network.backend }}"
+  tags:
+  - subnetnsg
+  - network
+
+- name: Verwijderen Front-End NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ env_short }}-Front-End-NSG"
+    rules:
+      - name: "{{ item.rulename }}"
+        protocol: "{{ item.protocol }}"
+        destination_port_range: "{{ item.destportrange }}"
+        access: "{{ item.access }}"
+        priority: "{{ item.priority }}"
+        direction: "{{ item.direction}}"
+        source_address_prefix: "{{ item.sourceaddressprefix }}"
+    state: absent
+  with_items: "{{ network.frontend }}"
+  tags:
+  - subnetnsg
+  - network
+
+- name: Verwijderen Management NSG
+  azure_rm_securitygroup:
+    resource_group: "{{ resourcegroup }}"
+    name: "{{ env_short }}-Management-NSG"
+    rules:
+      - name: "{{ item.rulename }}"
+        protocol: "{{ item.protocol }}"
+        destination_port_range: "{{ item.destportrange }}"
+        access: "{{ item.access }}"
+        priority: "{{ item.priority }}"
+        direction: "{{ item.direction}}"
+        source_address_prefix: "{{ item.sourceaddressprefix }}"
+    state: absent
+  with_items: "{{ network.management }}"
   tags:
   - subnetnsg
   - network
