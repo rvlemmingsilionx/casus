@@ -1,3 +1,10 @@
+- name: Set timezone to Europe/Amsterdam
+  timezone:
+    name: Europe/Amsterdam
+  become: yes
+  when:
+    - "'nfsservers' in group_names"
+    
 - name: Install NFS service
   apt:
     name: nfs-kernel-server

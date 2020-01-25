@@ -1,4 +1,10 @@
----
+- name: Set timezone to Europe/Amsterdam
+  timezone:
+    name: Europe/Amsterdam
+  become: yes
+  when:
+    - "'webservers' in group_names"
+    
 - name: Install packages
   apt:
     pkg:

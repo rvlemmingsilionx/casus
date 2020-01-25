@@ -1,4 +1,11 @@
-- name: Installeren van een SQL service
+- name: Set timezone to Europe/Amsterdam
+  timezone:
+    name: Europe/Amsterdam
+  become: yes
+  when:
+    - "'sqlservers' in group_names"
+    
+- name: Installeren van de SQL service
   apt:
     pkg:
     - mysql-server

@@ -1,0 +1,6 @@
+- name: Set timezone to Europe/Amsterdam
+  timezone:
+    name: Europe/Amsterdam
+  become: yes
+  when:
+    - "'backupserver' in group_names"

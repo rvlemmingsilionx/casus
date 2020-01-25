@@ -6,7 +6,11 @@
     group: "{{ adminname }}"
     mode: '600'
 
-
+- name: Set timezone to Europe/Amsterdam
+  timezone:
+    name: Europe/Amsterdam
+  become: yes
+  
 - name: Adding the Ansible repository
   apt_repository:
     repo: ppa:ansible/ansible

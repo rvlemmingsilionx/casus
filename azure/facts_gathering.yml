@@ -166,12 +166,16 @@
     delegate_to: 127.0.0.1
     become: yes
 
+  - name: Get date and time
+    shell: date
+    register: timestamp
+    
   - name: Get last update timestamp
     lineinfile:
       path: /var/www/html/timestamp.txt
       line: "{{ item }}"
       create: no
     with_items:
-      - "{{ ansible_date_time.iso8601 }}"
+      - "{{ timestamp }}"
     delegate_to: 127.0.0.1
     become: yes
