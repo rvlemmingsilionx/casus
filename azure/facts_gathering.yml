@@ -40,7 +40,7 @@
 
 ####################  Backup  ####################
 
-- hosts: backupservers
+- hosts: backupserver
   tasks:
   - name: Check if backup is running. # Moet nog een SSH check worden toegevoegd
     service:
