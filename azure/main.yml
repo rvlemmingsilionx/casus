@@ -9,7 +9,7 @@
       private: no
 
     - name: choice
-      prompt: "Do you want to deploy the compute components in Microsoft Azure for 'De Wolk'? (production/staging/no)"
+      prompt: "Do you want to deploy the compute components in Microsoft Azure for 'De Wolk'? (yes/no)"
       private: no
 
 
@@ -22,10 +22,10 @@
       when: choice == "yes"
     - set_fact:
         env_short: PROD
-      when: choice == "production"
+      when: env == "production"
     - set_fact:
         env_short: STAG
-      when: choice == "staging"
+      when: env == "staging"
     - debug:
         var: env_short
   roles:
