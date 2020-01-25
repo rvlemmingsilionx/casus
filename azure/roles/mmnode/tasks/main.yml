@@ -10,7 +10,7 @@
   timezone:
     name: Europe/Amsterdam
   become: yes
-  
+
 - name: Adding the Ansible repository
   apt_repository:
     repo: ppa:ansible/ansible
@@ -59,7 +59,16 @@
     name: "Run facts playbook"
     minute: "*/2"
     hour: "*"
-    job: "ansible-playbook /home/ansibleuser/casus/azure facts.yml -i /home/ansibleuser/casus/azure/hostsprod"
+    job: "ansible-playbook /home/ansibleuser/casus/azure/facts_gathering.yml -i /home/ansibleuser/casus/azure/hostsprod"
+  when: env == "production"
+
+- name: Add facts playbook to cron
+  cron:
+    name: "Run facts playbook"
+    minute: "*/2"
+    hour: "*"
+    job: "ansible-playbook /home/ansibleuser/casus/azure/facts_gathering.yml -i /home/ansibleuser/casus/azure/hostsstag"
+  when: env == "staging"
 
 - name: Remove old index file
   file:
