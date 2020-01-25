@@ -148,6 +148,7 @@
       line: "{{ item }}"
       create: no
     with_items:
+      - "{{ ansible_hostname }}"
       - "{{ service_facts.ansible_facts.services['apache2'] | to_nice_yaml }}"
     delegate_to: 127.0.0.1
     become: yes
