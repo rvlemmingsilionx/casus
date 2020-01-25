@@ -39,33 +39,53 @@ vnetprefix: 192.168.0.0/16
 
 # Subnet en NSG configuratie per subnet
 network:
-  nsgs:
-  - nsgname: Back-End-NSG
-    rulename: SSH
-    protocol: Tcp
-    destportrange: 22
-    access: Allow
-    priority: 100
-    direction: Inbound
-    status: present
+  backend:
+    - rulename: SSH
+      protocol: Tcp
+      destportrange: 22
+      access: Allow
+      priority: 100
+      direction: Inbound
+      sourceaddressprefix: "*"
+      status: present
 
-  - nsgname: Front-End-NSG
-    rulename: SSH
-    protocol: Tcp
-    destportrange: 22
-    access: Allow
-    priority: 100
-    direction: Inbound
-    status: present
+  frontend:
+    - rulename: SSH
+      protocol: Tcp
+      destportrange: 22
+      sourceaddressprefix: "*"
+      access: Allow
+      priority: 100
+      direction: Inbound
+      status: present
 
-  - nsgname: Management-NSG
-    rulename: SSH
-    protocol: Tcp
-    destportrange: 22
-    access: Allow
-    priority: 100
-    direction: Inbound
-    status: present
+    - rulename: HTTP
+      protocol: Tcp
+      destportrange: 80
+      access: Allow
+      priority: 101
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+
+  management:
+    - rulename: SSH
+      protocol: Tcp
+      destportrange: 22
+      access: Allow
+      priority: 100
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
+
+    - rulename: HTTP
+      protocol: Tcp
+      destportrange: 80
+      access: Allow
+      priority: 101
+      direction: Inbound
+      status: present
+      sourceaddressprefix: "*"
 
   subnets:
   - subnetname: Front-End

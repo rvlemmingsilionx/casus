@@ -74,7 +74,7 @@
   file:
     path: /var/www/html/index.html
     state: absent
-  become:
+  become: yes
 
 - name: Copy new index file
   copy:
