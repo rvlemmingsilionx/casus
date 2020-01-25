@@ -19,7 +19,7 @@
   - name: Create empty file if not present
     copy:
       content: ""
-      dest: /var/www/html/nfsserver.txt
+      dest: /var/www/html/dataserver.txt
       force: yes
       group: nogroup
       owner: nobody
@@ -29,7 +29,7 @@
 
   - name: Put variables into file.
     lineinfile:
-      path: /var/www/html/nfsserver.txt
+      path: /var/www/html/dataserver.txt
       line: "{{ item }}"
       create: no
     with_items:
@@ -134,7 +134,7 @@
   - name: Create empty file if not present
     copy:
       content: ""
-      dest: /var/www/html/web01server.txt
+      dest: /var/www/html/webservers.txt
       force: yes
       group: nogroup
       owner: nobody
@@ -144,7 +144,7 @@
 
   - name: Put variables into file.
     lineinfile:
-      path: /var/www/html/web01server.txt
+      path: /var/www/html/webservers.txt
       line: "{{ item }}"
       create: no
     with_items:
