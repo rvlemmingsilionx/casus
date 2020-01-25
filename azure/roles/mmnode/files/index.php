@@ -12,3 +12,6 @@ echo '<h4> Status SQL server </h4>';
 echo str_replace("\n","<BR>",file_get_contents('sqlserver.txt'));
 echo '-----<BR>';
 echo '<p> Status wordt elke 2 minuten geupdated </p>';
+echo '-----<BR>';
+echo '<h4> Laatste update: </h4>';
+echo str_replace("\n","<BR>",file_get_contents('timestamp.txt'));
