@@ -1,6 +1,6 @@
 ####################  NFS  ####################
 ---
-- hosts: 192.168.1.5
+- hosts: nfsservers
   tasks:
   - name: Check if NFS is running. # Moet nog een SSH check worden toegevoegd
     service:
@@ -40,7 +40,7 @@
 
 ####################  Backup  ####################
 
-- hosts: 192.168.1.6
+- hosts: backupservers
   tasks:
   - name: Check if backup is running. # Moet nog een SSH check worden toegevoegd
     service:
@@ -78,7 +78,7 @@
 
 ####################  SQL  ####################
 
-- hosts: 192.168.1.7
+- hosts: sqlservers
   tasks:
   - name: Check if SQL is running. # Moet nog een SSH check worden toegevoegd
     service:
@@ -116,7 +116,7 @@
 
 ####################  WEB01  ####################
 
-- hosts: 192.168.0.5
+- hosts: webservers
   tasks:
   - name: Check if WEB01 is running. # Moet nog een SSH check worden toegevoegd
     service:

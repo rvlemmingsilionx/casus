@@ -1,41 +1,43 @@
 ####################  NFS  ####################
 ---
-- name: Check if NFS is running. # Moet nog een SSH check worden toegevoegd
-  service:
-    name: "{{ item }}"
-    state: started
-    enabled: yes
-  with_items:
-    - nfs-kernel-server
-    - sshd
-  become: yes
-  when:
-    - "'nfsservers' in group_names"
+- hosts: servers
+  tasks:
+  - name: Check if NFS is running. # Moet nog een SSH check worden toegevoegd
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+      - nfs-kernel-server
+      - sshd
+    become: yes
+    when:
+      - "'nfsservers' in group_names"
 
-- name: Get service facts
-  service_facts:
-  register: service_facts
-  when:
-    - "'nfsservers' in group_names"
+  - name: Get service facts
+    service_facts:
+    register: service_facts
+    when:
+      - "'nfsservers' in group_names"
 
-- name: Create empty file if not present
-  copy:
-    content: ""
-    dest: /var/www/html/nfsserver.txt
-    force: yes
-    group: nogroup
-    owner: nobody
-    mode: 0775
-  delegate_to: 127.0.0.1
-  become: yes
+  - name: Create empty file if not present
+    copy:
+      content: ""
+      dest: /var/www/html/nfsserver.txt
+      force: yes
+      group: nogroup
+      owner: nobody
+      mode: 0775
+    delegate_to: 127.0.0.1
+    become: yes
 
-- name: Put variables into file.
-  lineinfile:
-    path: /var/www/html/nfsserver.txt
-    line: "{{ item }}"
-    create: no
-  with_items:
-    - "{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}"
-    - "{{ service_facts.ansible_facts.services['ssh'] | to_nice_yaml }}"
-  delegate_to: 127.0.0.1
-  become: yes
+  - name: Put variables into file.
+    lineinfile:
+      path: /var/www/html/nfsserver.txt
+      line: "{{ item }}"
+      create: no
+    with_items:
+      - "{{ service_facts.ansible_facts.services['nfs-kernel-server'] | to_nice_yaml }}"
+      - "{{ service_facts.ansible_facts.services['ssh'] | to_nice_yaml }}"
+    delegate_to: 127.0.0.1
+    become: yes
