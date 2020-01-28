@@ -4,7 +4,7 @@
   become: yes
   when:
     - "'nfsservers' in group_names"
-    
+
 - name: Install NFS service
   apt:
     name: nfs-kernel-server
@@ -50,10 +50,20 @@
 - name: Designate webshare
   lineinfile:
    path: /etc/exports
+   line: '/var/webshare 192.168.0.0/24(rw,no_root_squash,no_subtree_check)'
+  become: yes
+  when:
+    - "'nfsservers' in group_names"
+    - env == "staging"
+
+- name: Designate webshare
+  lineinfile:
+   path: /etc/exports
    line: '/var/webshare 10.0.0.0/24(rw,no_root_squash,no_subtree_check)'
   become: yes
   when:
     - "'nfsservers' in group_names"
+    - env == "production"
 
 - name: Update etab
   shell: exportfs -r
