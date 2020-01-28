@@ -139,6 +139,10 @@
       - apache2
     become: yes
     ignore_errors: True
+    register: whenfailed
+
+  - debug:
+      var: whenfailed
 
   - name: Get service facts
     service_facts:
