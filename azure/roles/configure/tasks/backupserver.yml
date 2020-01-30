@@ -4,3 +4,17 @@
   become: yes
   when:
     - "'backupserver' in group_names"
+
+- name: Copy Private SSH Key
+  copy:
+    src: ../files/id_rsa
+    dest: .ssh/id_rsa
+    owner: "{{ adminname }}"
+    group: "{{ adminname }}"
+    mode: '600'
+
+- name: Make Backupfolder
+  file:
+    path: /home/{{ adminname }}/backups
+    state: directory
+    mode: 775
