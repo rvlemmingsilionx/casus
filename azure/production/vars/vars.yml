@@ -46,7 +46,9 @@ network:
       access: Allow
       priority: 100
       direction: Inbound
-      sourceaddressprefix: 10.0.2.0/29
+      sourceaddressprefix:
+        - 10.0.2.0/29
+        - 10.0.1.0/28
       status: present
 
     - rulename: SQL

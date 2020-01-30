@@ -12,9 +12,13 @@
     owner: "{{ adminname }}"
     group: "{{ adminname }}"
     mode: '600'
+  when:
+  - "'backupserver' in group_names"
 
 - name: Make Backupfolder
   file:
     path: /home/{{ adminname }}/backups
     state: directory
-    mode: 775
+    mode: '0775'
+  when:
+  - "'backupserver' in group_names"
