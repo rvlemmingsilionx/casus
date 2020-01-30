@@ -85,6 +85,6 @@
     name: "Backup maken"
     minute: "0"
     hour: "20"
-    job: "tar -czf /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/webshare && scp /tmp/backup-$(date +%Y-%m-%d).tar.gz {{ adminname }}@{{ private_ip_backup }} /home/{{adminname}}/backups/"
+    job: "tar -czf /tmp/backup-$(date +%Y-%m-%d).tar.gz /var/webshare && scp /tmp/backup-$(date +%Y-%m-%d).tar.gz:{{ adminname }}@{{ private_ip_backup }} /home/{{adminname}}/backups/"
   when:
     - "'nfsservers' in group_names"
