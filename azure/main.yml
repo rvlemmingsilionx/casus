@@ -5,7 +5,7 @@
   gather_facts: "{{ choice }}"
   vars_prompt:
     - name: env
-      prompt: "Do you want to make changes in the staging or production environment? (production/staging)"
+      prompt: "Do dyou want to make changes in the staging or production environment? (production/staging)"
       private: no
 
     - name: choice
